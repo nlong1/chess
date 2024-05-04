@@ -10,13 +10,12 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    private ChessGame.TeamColor piece_color;
-    private ChessPiece.PieceType piece_type;
-    private Collection<ChessMove> available_moves;
-
+    private ChessGame.TeamColor pieceColor;
+    private ChessPiece.PieceType pieceType;
+    private Collection<ChessMove> emptymoves = new ArrayList<>();
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.piece_color = pieceColor;
-        this.piece_type = type;
+        this.pieceColor = pieceColor;
+        this.pieceType = type;
     }
 
     /**
@@ -35,14 +34,14 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return piece_color;
+        return pieceColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return piece_type;
+        return pieceType;
     }
 
     /**
@@ -53,11 +52,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (this.getPieceType() == PieceType.KNIGHT){
+        if (this.getPieceType() == PieceType.KNIGHT) {
             KnightMoves knight = new KnightMoves(board, myPosition);
-            available_moves = knight.Calculator();
+            return knight.Calculator();
         }
-        return new ArrayList<>();
-//        return available_moves;
+
+            return emptymoves;
     }
 }
