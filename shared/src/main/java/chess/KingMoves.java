@@ -1,4 +1,72 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+
 public class KingMoves {
+    private ChessGame.TeamColor teamColor;
+    private ChessBoard board;
+    private ChessPosition position;
+    private Collection<ChessMove> availableMoves = new ArrayList<>();
+
+    public KingMoves(ChessBoard board, ChessPosition myPosition){
+        this.teamColor = board.getPiece(myPosition).getTeamColor();
+        this.board = board;
+        this.position = myPosition;
+    }
+
+    private boolean CheckOnBoard(ChessPosition position){
+        if ((1<=position.getRow()) && (position.getRow()<=8) && (1<=position.getColumn()) && (position.getColumn()<=8)){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkNewPosition(ChessPosition position, ChessBoard board){
+        if (board.getPiece(position) == null){
+            return true;
+        }
+        else if (board.getPiece(position).getTeamColor() != teamColor){
+            return true;
+        }
+        return false;
+    }
+
+    private void Calculation(ChessPosition newPosition){
+        // PUT THEM IN THE CHECK VALID COORDINATE
+        if (CheckOnBoard(newPosition)){
+            //  IF THIS RETURNS TRUE, CHECK IF THERE IS A PIECE AND ITS COLOR.
+            if (checkNewPosition(newPosition, board)){
+                // NOW ADD THIS NEW MOVE TO AVAILABLE MOVES
+                ChessMove newMove = new ChessMove(position,newPosition,null);
+                availableMoves.add(newMove);
+            }
+        }
+    }
+
+    public Collection<ChessMove> Calculator(){
+//        MAKE A LIST OF ALL POSSIBLE MOVES FOR KING
+        ChessPosition position1 = new  ChessPosition(position.getRow() + 1, position.getColumn()-1);
+        ChessPosition position2 = new  ChessPosition(position.getRow() + 1, position.getColumn());
+        ChessPosition position3 = new  ChessPosition(position.getRow() + 1, position.getColumn() + 1);
+        ChessPosition position4 = new  ChessPosition(position.getRow(), position.getColumn() - 1);
+        ChessPosition position5 = new  ChessPosition(position.getRow(), position.getColumn() + 1);
+        ChessPosition position6 = new  ChessPosition(position.getRow() - 1, position.getColumn() - 1);
+        ChessPosition position7 = new  ChessPosition(position.getRow() - 1, position.getColumn());
+        ChessPosition position8 = new  ChessPosition(position.getRow() - 1, position.getColumn() + 1);
+
+
+//        CHECK/ADD ALL AVAILABLE MOVES
+        Calculation(position1);
+        Calculation(position2);
+        Calculation(position3);
+        Calculation(position4);
+        Calculation(position5);
+        Calculation(position6);
+        Calculation(position7);
+        Calculation(position8);
+
+        return availableMoves;
+    }
 }

@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -9,7 +12,7 @@ package chess;
 public class ChessBoard {
     private ChessPiece[][] boardSquares = new ChessPiece[8][8];
     public ChessBoard() {
-        
+
     }
 
     /**
@@ -21,6 +24,7 @@ public class ChessBoard {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         boardSquares[position.getRow()-1][position.getColumn()-1] = piece;
     }
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -90,42 +94,52 @@ public class ChessBoard {
         ChessPiece blackPawn = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN);
 
 //        ADD PIECES TO BOARD
-        addPiece(position11,whiteRook);
-        addPiece(position12,whiteKnight);
-        addPiece(position13,whiteBishop);
-        addPiece(position14,whiteQueen);
-        addPiece(position15,whiteKing);
-        addPiece(position16,whiteBishop);
-        addPiece(position17,whiteKnight);
-        addPiece(position18,whiteRook);
+        this.addPiece(position11,whiteRook);
+        this.addPiece(position12,whiteKnight);
+        this.addPiece(position13,whiteBishop);
+        this.addPiece(position14,whiteQueen);
+        this.addPiece(position15,whiteKing);
+        this.addPiece(position16,whiteBishop);
+        this.addPiece(position17,whiteKnight);
+        this.addPiece(position18,whiteRook);
 
-        addPiece(position81,blackRook);
-        addPiece(position82,blackKnight);
-        addPiece(position83,blackBishop);
-        addPiece(position84,blackQueen);
-        addPiece(position85,blackKing);
-        addPiece(position86,blackBishop);
-        addPiece(position87,blackKnight);
-        addPiece(position88,blackRook);
+        this.addPiece(position81,blackRook);
+        this.addPiece(position82,blackKnight);
+        this.addPiece(position83,blackBishop);
+        this.addPiece(position84,blackQueen);
+        this.addPiece(position85,blackKing);
+        this.addPiece(position86,blackBishop);
+        this.addPiece(position87,blackKnight);
+        this.addPiece(position88,blackRook);
 
-        addPiece(position21,whitePawn);
-        addPiece(position22,whitePawn);
-        addPiece(position23,whitePawn);
-        addPiece(position24,whitePawn);
-        addPiece(position25,whitePawn);
-        addPiece(position26,whitePawn);
-        addPiece(position27,whitePawn);
-        addPiece(position28,whitePawn);
+        this.addPiece(position21,whitePawn);
+        this.addPiece(position22,whitePawn);
+        this.addPiece(position23,whitePawn);
+        this.addPiece(position24,whitePawn);
+        this.addPiece(position25,whitePawn);
+        this.addPiece(position26,whitePawn);
+        this.addPiece(position27,whitePawn);
+        this.addPiece(position28,whitePawn);
 
-        addPiece(position71,blackPawn);
-        addPiece(position72,blackPawn);
-        addPiece(position73,blackPawn);
-        addPiece(position74,blackPawn);
-        addPiece(position75,blackPawn);
-        addPiece(position76,blackPawn);
-        addPiece(position77,blackPawn);
-        addPiece(position78,blackPawn);
+        this.addPiece(position71,blackPawn);
+        this.addPiece(position72,blackPawn);
+        this.addPiece(position73,blackPawn);
+        this.addPiece(position74,blackPawn);
+        this.addPiece(position75,blackPawn);
+        this.addPiece(position76,blackPawn);
+        this.addPiece(position77,blackPawn);
+        this.addPiece(position78,blackPawn);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessBoard that)) return false;
+        return Objects.deepEquals(boardSquares, that.boardSquares);
+    }
 
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(boardSquares);
     }
 }

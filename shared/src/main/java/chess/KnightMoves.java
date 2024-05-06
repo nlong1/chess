@@ -23,7 +23,7 @@ public class KnightMoves {
         return false;
     }
 
-    private boolean CheckPieceType(ChessPosition position, ChessBoard board){
+    private boolean CheckNewPosition(ChessPosition position, ChessBoard board){
         if (board.getPiece(position) == null){
             return true;
         }
@@ -37,8 +37,8 @@ public class KnightMoves {
     private void Calculation(ChessPosition newPosition){
         // PUT THEM IN THE CHECK VALID COORDINATE
         if (CheckOnBoard(newPosition)){
-            //  IF THIS RETURNS TRUE, CHECK IF THERE IS A PIECE AND ITS TYPE.
-            if (CheckPieceType(newPosition, board)){
+            //  IF THIS RETURNS TRUE, CHECK IF THERE IS A PIECE AND ITS COLOR
+            if (CheckNewPosition(newPosition, board)){
                     // NOW ADD THIS NEW MOVE TO AVAILABLE MOVES
                 ChessMove newMove = new ChessMove(position,newPosition,null);
                 availableMoves.add(newMove);
