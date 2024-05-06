@@ -65,15 +65,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (this.getPieceType() == PieceType.KNIGHT){
-            KnightMoves knight = new KnightMoves(board, myPosition);
-            return knight.Calculator();
-        }
-        if (this.getPieceType() == PieceType.KING){
-            KingMoves king = new KingMoves(board,myPosition);
-            return king.Calculator();
-        }
+        switch (this.getPieceType()) {
 
-            return emptymoves;
+            case PieceType.KNIGHT:
+                KnightMoves knight = new KnightMoves(board, myPosition);
+                return knight.calculator();
+
+            case PieceType.KING:
+                KingMoves king = new KingMoves(board, myPosition);
+                return king.calculator();
+
+            case PieceType.PAWN:
+                PawnMoves pawn = new PawnMoves(board,myPosition);
+                return pawn.calculator();
+
+            default:
+                return emptymoves;
+        }
     }
 }

@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 public class KingMoves {
     private ChessGame.TeamColor teamColor;
@@ -16,7 +15,7 @@ public class KingMoves {
         this.position = myPosition;
     }
 
-    private boolean CheckOnBoard(ChessPosition position){
+    private boolean checkOnBoard(ChessPosition position){
         if ((1<=position.getRow()) && (position.getRow()<=8) && (1<=position.getColumn()) && (position.getColumn()<=8)){
             return true;
         }
@@ -33,9 +32,9 @@ public class KingMoves {
         return false;
     }
 
-    private void Calculation(ChessPosition newPosition){
+    private void calculation(ChessPosition newPosition){
         // PUT THEM IN THE CHECK VALID COORDINATE
-        if (CheckOnBoard(newPosition)){
+        if (checkOnBoard(newPosition)){
             //  IF THIS RETURNS TRUE, CHECK IF THERE IS A PIECE AND ITS COLOR.
             if (checkNewPosition(newPosition, board)){
                 // NOW ADD THIS NEW MOVE TO AVAILABLE MOVES
@@ -45,7 +44,7 @@ public class KingMoves {
         }
     }
 
-    public Collection<ChessMove> Calculator(){
+    public Collection<ChessMove> calculator(){
 //        MAKE A LIST OF ALL POSSIBLE MOVES FOR KING
         ChessPosition position1 = new  ChessPosition(position.getRow() + 1, position.getColumn()-1);
         ChessPosition position2 = new  ChessPosition(position.getRow() + 1, position.getColumn());
@@ -58,14 +57,14 @@ public class KingMoves {
 
 
 //        CHECK/ADD ALL AVAILABLE MOVES
-        Calculation(position1);
-        Calculation(position2);
-        Calculation(position3);
-        Calculation(position4);
-        Calculation(position5);
-        Calculation(position6);
-        Calculation(position7);
-        Calculation(position8);
+        calculation(position1);
+        calculation(position2);
+        calculation(position3);
+        calculation(position4);
+        calculation(position5);
+        calculation(position6);
+        calculation(position7);
+        calculation(position8);
 
         return availableMoves;
     }
