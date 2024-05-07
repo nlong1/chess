@@ -65,33 +65,32 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (this.getPieceType()) {
-
-            case PieceType.KNIGHT:
+        return switch (this.getPieceType()) {
+            case PieceType.KNIGHT -> {
                 KnightMoves knight = new KnightMoves(board, myPosition);
-                return knight.calculator();
-
-            case PieceType.KING:
+                yield knight.calculator();
+            }
+            case PieceType.KING -> {
                 KingMoves king = new KingMoves(board, myPosition);
-                return king.calculator();
-
-            case PieceType.PAWN:
-                PawnMoves pawn = new PawnMoves(board,myPosition);
-                return pawn.calculator();
-
-            case PieceType.ROOK:
-                RookMoves rook = new RookMoves(board,myPosition);
-                return rook.calculator();
-
-            case PieceType.BISHOP:
-                BishopMoves bishop = new BishopMoves(board,myPosition);
-                return bishop.calculator();
-
-            case PieceType.QUEEN:
-
-
-            default:
-                return emptymoves;
-        }
+                yield king.calculator();
+            }
+            case PieceType.PAWN -> {
+                PawnMoves pawn = new PawnMoves(board, myPosition);
+                yield pawn.calculator();
+            }
+            case PieceType.ROOK -> {
+                RookMoves rook = new RookMoves(board, myPosition);
+                yield rook.calculator();
+            }
+            case PieceType.BISHOP -> {
+                BishopMoves bishop = new BishopMoves(board, myPosition);
+                yield bishop.calculator();
+            }
+            case PieceType.QUEEN -> {
+                QueenMoves queen = new QueenMoves(board, myPosition);
+                yield queen.calculator();
+            }
+            default -> emptymoves;
+        };
     }
 }
