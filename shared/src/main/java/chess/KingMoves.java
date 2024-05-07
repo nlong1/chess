@@ -16,20 +16,14 @@ public class KingMoves {
     }
 
     private boolean checkOnBoard(ChessPosition position){
-        if ((1<=position.getRow()) && (position.getRow()<=8) && (1<=position.getColumn()) && (position.getColumn()<=8)){
-            return true;
-        }
-        return false;
+        return (1 <= position.getRow()) && (position.getRow() <= 8) && (1 <= position.getColumn()) && (position.getColumn() <= 8);
     }
 
     private boolean checkNewPosition(ChessPosition position, ChessBoard board){
         if (board.getPiece(position) == null){
             return true;
         }
-        else if (board.getPiece(position).getTeamColor() != teamColor){
-            return true;
-        }
-        return false;
+        else return board.getPiece(position).getTeamColor() != teamColor;
     }
 
     private void calculation(ChessPosition newPosition){

@@ -79,6 +79,17 @@ public class ChessPiece {
                 PawnMoves pawn = new PawnMoves(board,myPosition);
                 return pawn.calculator();
 
+            case PieceType.ROOK:
+                RookMoves rook = new RookMoves(board,myPosition);
+                return rook.calculator();
+
+            case PieceType.BISHOP:
+                BishopMoves bishop = new BishopMoves(board,myPosition);
+                return bishop.calculator();
+
+            case PieceType.QUEEN:
+
+
             default:
                 return emptymoves;
         }
