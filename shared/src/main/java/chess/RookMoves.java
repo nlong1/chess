@@ -1,113 +1,127 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.HashSet;
 
 public class RookMoves {
-    private ChessGame.TeamColor teamColor;
+    private ChessGame.TeamColor pieceColor;
     private ChessBoard board;
-    private ChessPosition position;
-    private Collection<ChessMove> availableMoves = new ArrayList<>();
+    private ChessPosition myPosition;
+    private Collection<ChessMove> availableMoves = new HashSet<ChessMove>();
 
     public RookMoves(ChessBoard board, ChessPosition myPosition){
-        this.teamColor = board.getPiece(myPosition).getTeamColor();
         this.board = board;
-        this.position = myPosition;
+        this.myPosition = myPosition;
+        this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean checkOnBoard(ChessPosition position){
-        return (1 <= position.getRow()) && (position.getRow() <= 8) && (1 <= position.getColumn()) && (position.getColumn() <= 8);
+    private boolean onBoardCheck(ChessPosition newPosition){
+        if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
+            return true;
+        }
+        return false;
     }
 
-    private boolean checkNewPosition(ChessPosition newPosition, ChessBoard board){
+    private boolean emptySpaceCheck(ChessPosition newPosition){
         if (board.getPiece(newPosition) == null){
             return true;
         }
         return false;
     }
 
-    private boolean checkCapture(ChessPosition newPosition, ChessBoard board){
-        if (board.getPiece(newPosition).getTeamColor() != teamColor){
+    private boolean enemyPieceCheck(ChessPosition newPosition){
+        if (board.getPiece(newPosition).getTeamColor() != pieceColor){
             return true;
         }
         return false;
     }
 
+    private void addMove(ChessPosition newPosition){
+        ChessMove newMove = new ChessMove(myPosition,newPosition,null);
+        availableMoves.add(newMove);
+    }
 
     public Collection<ChessMove> calculator(){
+//        possible moving positions
 
-// Index columns to the right
-        for (int i = 1;i < 7;i++){
-            ChessPosition newPosition = new ChessPosition(position.getRow(),position.getColumn() + i);
-            if (!checkOnBoard(newPosition)){
-                break;
-            }
-            ChessMove newMove = new ChessMove(position,newPosition,null);
-            if (checkNewPosition(newPosition,board)) {
-                availableMoves.add(newMove);
-            }
-            else if (checkCapture(newPosition,board)){
-                availableMoves.add(newMove);
-                break;
+//      GO TO THE RIGHT
+
+        for (int i = 1;i<8;i++){
+            ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()+i);
+            if (onBoardCheck(newPosition)){
+                if (emptySpaceCheck(newPosition)){
+                    addMove(newPosition);
+                }
+                else if (enemyPieceCheck(newPosition)){
+                    addMove(newPosition);
+                    break;
+                }
+                else{
+                    break;
+                }
             }
             else{
                 break;
             }
         }
 
-// Index columns to the left
-        for (int i = 1;i < 7;i++){
-            ChessPosition newPosition = new ChessPosition(position.getRow(),position.getColumn() - i);
-            if (!checkOnBoard(newPosition)){
-                break;
-            }
-            ChessMove newMove = new ChessMove(position,newPosition,null);
-            if (checkNewPosition(newPosition,board)) {
-                availableMoves.add(newMove);
-            }
-            else if (checkCapture(newPosition,board)){
-                availableMoves.add(newMove);
-                break;
-            }
-            else{
-                break;
-            }
+//      LEFT
 
-        }
-
-// Index row up
-        for (int i = 1;i < 7;i++){
-            ChessPosition newPosition = new ChessPosition(position.getRow() + i,position.getColumn());
-            if (!checkOnBoard(newPosition)){
-                break;
-            }
-            ChessMove newMove = new ChessMove(position,newPosition,null);
-            if (checkNewPosition(newPosition,board)) {
-                availableMoves.add(newMove);
-            }
-            else if (checkCapture(newPosition,board)){
-                availableMoves.add(newMove);
-                break;
+        for (int i = 1;i<8;i++){
+            ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()-i);
+            if (onBoardCheck(newPosition)){
+                if (emptySpaceCheck(newPosition)){
+                    addMove(newPosition);
+                }
+                else if (enemyPieceCheck(newPosition)){
+                    addMove(newPosition);
+                    break;
+                }
+                else{
+                    break;
+                }
             }
             else{
                 break;
             }
         }
 
-// Index row down
-        for (int i = 1;i < 7;i++){
-            ChessPosition newPosition = new ChessPosition(position.getRow() - i,position.getColumn());
-            if (!checkOnBoard(newPosition)){
+//      UP
+
+        for (int i = 1;i<8;i++){
+            ChessPosition newPosition = new ChessPosition(myPosition.getRow()+i,myPosition.getColumn());
+            if (onBoardCheck(newPosition)){
+                if (emptySpaceCheck(newPosition)){
+                    addMove(newPosition);
+                }
+                else if (enemyPieceCheck(newPosition)){
+                    addMove(newPosition);
+                    break;
+                }
+                else{
+                    break;
+                }
+            }
+            else{
                 break;
             }
-            ChessMove newMove = new ChessMove(position,newPosition,null);
-            if (checkNewPosition(newPosition,board)) {
-                availableMoves.add(newMove);
-            }
-            else if (checkCapture(newPosition,board)){
-                availableMoves.add(newMove);
-                break;
+        }
+
+//      DOWN
+
+        for (int i = 1;i<8;i++){
+            ChessPosition newPosition = new ChessPosition(myPosition.getRow()-i,myPosition.getColumn());
+            if (onBoardCheck(newPosition)){
+                if (emptySpaceCheck(newPosition)){
+                    addMove(newPosition);
+                }
+                else if (enemyPieceCheck(newPosition)){
+                    addMove(newPosition);
+                    break;
+                }
+                else{
+                    break;
+                }
             }
             else{
                 break;
@@ -116,5 +130,4 @@ public class RookMoves {
 
         return availableMoves;
     }
-
 }
