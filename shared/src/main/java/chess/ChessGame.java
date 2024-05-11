@@ -72,7 +72,14 @@ public class ChessGame {
         if (piece == null){
             return null;
         }
-        return piece.pieceMoves(board,startPosition);
+//        return piece.pieceMoves(board, startPosition);
+        else {
+            Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+//            if a john causes check
+            for (ChessMove move : pieceMoves){
+                ChessBoard cloned_board = board.clone();
+            }
+        }
     }
 
     /**
@@ -110,29 +117,6 @@ public class ChessGame {
         }
         return possibleEnemyTeamMoves;
     }
-    /**
-     * @param color the color of the friendly team
-     * @return Position of the King
-     */
-    public ChessPosition locateKing(TeamColor color){
-//        LOOPS THROUGH ALL POSITIONS ON THE BOARD TO FIND PIECES
-//        IF THESE PIECES ARE OF THE ENEMY TEAM COLOR, ADD THEIR MOVES TO THE POSSIBLE MOVES
-        for (int i = 1 ; i < 9 ; i++){
-            for (int j = 1; j < 9 ; j++){
-                ChessPosition position = new ChessPosition(i,j);
-                ChessPiece piece = board.getPiece(position);
-                if (piece != null){
-                    if (piece.getTeamColor() == color){
-                        if (piece.getPieceType() == ChessPiece.PieceType.KING){
-                            return position;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-    
     
     /**
      * Determines if the given team is in check
@@ -141,13 +125,15 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-//        FIND THE KING
-        ChessPosition kingLocation = this.locateKing(teamColor);
 //        CHECK IF THE END POSITION OF ANY ENEMY PIECE IS THE KING OF THE FRIENDLY TEAM
-        Collection<ChessMove> enemyTeamMoves = this.enemyTeamMoves(teamColor);
+        Collection<ChessMove> enemyTeamMoves = enemyTeamMoves(teamColor);
         for (ChessMove move : enemyTeamMoves){
-            if (move.getEndPosition() == kingLocation){
-                return true;
+            ChessPosition position = move.getEndPosition();
+            ChessPiece piece = board.getPiece(position);
+            if (piece != null){
+                if (piece.getPieceType() == ChessPiece.PieceType.KING){
+                    return true;
+                }
             }
         }
         return false;
