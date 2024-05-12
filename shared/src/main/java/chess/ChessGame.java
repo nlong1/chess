@@ -95,7 +95,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
-        if (board.getPiece(startPosition) == null){
+        if (board.getPiece(startPosition) == null || board.getPiece(startPosition).getTeamColor() != teamColor){
             throw new InvalidMoveException();
         }
 
@@ -105,7 +105,12 @@ public class ChessGame {
         }
 
         board.applyMove(move);
-
+        if (teamColor == TeamColor.BLACK){
+            teamColor = TeamColor.WHITE;
+        }
+        else {
+            teamColor = TeamColor.BLACK;
+        }
     }
 
     /**
