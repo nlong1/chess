@@ -99,9 +99,21 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        ChessPosition position = move.getStartPosition();
-        ChessPiece piece = board.getPiece(position);
+        ChessPosition startPosition = move.getStartPosition();
+        if (board.getPiece(startPosition) == null){
+            throw new InvalidMoveException();
+        }
+        ChessGame.TeamColor color = board.getPiece(startPosition).getTeamColor();
+        if (color != teamColor){
+            throw new InvalidMoveException();
+        }
+        Collection<ChessMove> moves = validMoves(startPosition);
+        if (!moves.contains(move)){
+            throw new InvalidMoveException();
+        }
+        board.applyMove(move);
 
+//        CHECK IF THE TEAM'S KING IS IN DANGER, IT IS THE OTHER TEAMS TURN, OR THE PIECE CANNOT MOVE THERE
 
 
 //        ChessPiece piece = board.getPiece(move.getStartPosition());
