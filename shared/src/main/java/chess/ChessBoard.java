@@ -10,7 +10,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard implements Cloneable {
-    private ChessPiece boardSquares[][] = new ChessPiece[8][8];
+    private ChessPiece[][] boardSquares = new ChessPiece[8][8];
 
     public ChessBoard() {
     }
@@ -24,6 +24,22 @@ public class ChessBoard implements Cloneable {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         boardSquares[position.getRow()-1][position.getColumn()-1] = piece;
     }
+
+    /**
+     * Performs a move
+     *
+     * @param move the move that the board will perform
+     */
+    public void applyMove(ChessMove move) {
+        ChessPiece piece = this.getPiece(move.getStartPosition());
+        if (move.getPromotionPiece() != null){
+            piece.setPieceType(move.getPromotionPiece());
+        }
+        this.addPiece(move.getEndPosition(),piece);
+        this.addPiece(move.getStartPosition(),null);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -140,16 +156,21 @@ public class ChessBoard implements Cloneable {
         this.addPiece(position78,blackPawn);
 
     }
-
     @Override
-        protected Object clone () throws CloneNotSupportedException {
+    public Object clone() {
+        try {
             ChessBoard clone = (ChessBoard) super.clone();
-            clone.boardSquares = new ChessPiece[8][8];
-            for (int i = 0;i < 8;i++){
-                for (int j = 0;j<8;j++){
-                    clone.boardSquares[i][j] = boardSquares[i][j];
+            ChessPiece[][] board = new ChessPiece[8][8];
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    board[i][j] = this.boardSquares[i][j];
                 }
             }
+            clone.boardSquares = board;
             return clone;
+        } catch(Exception e){
+            System.out.println("error");
+            return null;
+        }
     }
 }

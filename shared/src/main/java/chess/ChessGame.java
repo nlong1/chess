@@ -72,13 +72,21 @@ public class ChessGame {
         if (piece == null){
             return null;
         }
-//        return piece.pieceMoves(board, startPosition);
         else {
             Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+            Collection<ChessMove> validMoves = new HashSet<ChessMove>();
 //            if a john causes check
             for (ChessMove move : pieceMoves){
-                ChessBoard cloned_board = board.clone();
+                ChessBoard boardClone = (ChessBoard) board.clone();
+                boardClone.applyMove(move);
+                ChessBoard originalBoard = this.board;
+                this.board = boardClone;
+                if (!isInCheck(teamColor)){
+                    validMoves.add(move);
+                }
+                this.board = originalBoard;
             }
+            return validMoves;
         }
     }
 
@@ -89,8 +97,11 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
-    }
+            ChessPiece piece = board.getPiece(move.getStartPosition());
+            piece.setPieceType(move.getPromotionPiece());
+            board.addPiece(move.getEndPosition(), piece);
+            board.addPiece(move.getStartPosition(), null);
+        }
 
     /**
      * @param color the color of the friendly team
