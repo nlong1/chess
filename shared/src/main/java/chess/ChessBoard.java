@@ -31,12 +31,18 @@ public class ChessBoard implements Cloneable {
      * @param move the move that the board will perform
      */
     public void applyMove(ChessMove move) {
-        ChessPiece piece = this.getPiece(move.getStartPosition());
-        if (move.getPromotionPiece() != null){
-            piece.setPieceType(move.getPromotionPiece());
+        ChessPosition start = move.getStartPosition();
+        ChessPosition finish = move.getEndPosition();
+        ChessPiece piece = getPiece(start);
+        if (piece == null){
+            return;
         }
-        this.addPiece(move.getEndPosition(),piece);
-        this.addPiece(move.getStartPosition(),null);
+        this.addPiece(finish,piece);
+        this.addPiece(start,null);
+        ChessPiece.PieceType promotion = move.getPromotionPiece();
+        if (promotion != null){
+            piece.setPieceType(promotion);
+        }
     }
 
 
