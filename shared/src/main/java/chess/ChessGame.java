@@ -141,7 +141,7 @@ public class ChessGame {
 
     /**
      * @param color the color of the friendly team
-     * @return Enemy team's possible moves
+     * @return Friendly team's possible moves
      */
     public Collection<ChessMove> friendlyTeamMoves(TeamColor color){
         Collection<ChessMove> possibleEnemyTeamMoves = new HashSet<ChessMove>();
