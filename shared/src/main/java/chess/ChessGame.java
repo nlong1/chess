@@ -118,25 +118,9 @@ public class ChessGame {
      * @return Enemy team's possible moves
      */
     public Collection<ChessMove> enemyTeamMoves(TeamColor color){
-        Collection<ChessMove> possibleEnemyTeamMoves = new HashSet<ChessMove>();
         TeamColor enemyTeamColor = getEnemyTeamColor(color);
-//        LOOPS THROUGH ALL POSITIONS ON THE BOARD TO FIND PIECES
-//        IF THESE PIECES ARE OF THE ENEMY TEAM COLOR, ADD THEIR MOVES TO THE POSSIBLE MOVES
-        for (int i = 1 ; i < 9 ; i++){
-            for (int j = 1; j < 9 ; j++){
-                ChessPosition position = new ChessPosition(i,j);
-                ChessPiece piece = board.getPiece(position);
-                if (piece != null){
-                    if (piece.getTeamColor() ==  enemyTeamColor){
-                        Collection<ChessMove> pieceMoves = piece.pieceMoves(board,position);
-                        if (pieceMoves != null){
-                            possibleEnemyTeamMoves.addAll(pieceMoves);
-                        }
-                    }
-                }
-            }
-        }
-        return possibleEnemyTeamMoves;
+        return friendlyTeamMoves(enemyTeamColor);
+
     }
 
     /**
