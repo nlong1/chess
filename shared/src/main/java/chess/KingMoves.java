@@ -15,35 +15,35 @@ public class KingMoves {
         this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean onBoardCheck(ChessPosition newPosition){
+    private boolean isOnBoard(ChessPosition newPosition){
         if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
             return true;
         }
         return false;
     }
 
-    private boolean emptySpaceCheck(ChessPosition newPosition){
+    private boolean isEmptySpace(ChessPosition newPosition){
         if (board.getPiece(newPosition) == null){
             return true;
         }
         return false;
     }
 
-    private boolean checkEnemyPiece(ChessPosition newPosition){
+    private boolean isEnemyPiece(ChessPosition newPosition){
         if (board.getPiece(newPosition).getTeamColor() != pieceColor){
             return true;
         }
         return false;
     }
 
-    private void calculation (ChessPosition newPosition){
-        if (onBoardCheck(newPosition)){
-            if (emptySpaceCheck(newPosition)){
+    private void moveCalculation (ChessPosition newPosition){
+        if (isOnBoard(newPosition)){
+            if (isEmptySpace(newPosition)){
                 ChessMove newMove = new ChessMove(myPosition,newPosition,null);
                 availableMoves.add(newMove);
 
             }
-            else if (checkEnemyPiece(newPosition)){
+            else if (isEnemyPiece(newPosition)){
                 ChessMove newMove = new ChessMove(myPosition,newPosition,null);
                 availableMoves.add(newMove);
             }
@@ -61,14 +61,14 @@ public class KingMoves {
         ChessPosition newPosition7 = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
         ChessPosition newPosition8 = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
 
-        calculation(newPosition1);
-        calculation(newPosition2);
-        calculation(newPosition3);
-        calculation(newPosition4);
-        calculation(newPosition5);
-        calculation(newPosition6);
-        calculation(newPosition7);
-        calculation(newPosition8);
+        moveCalculation(newPosition1);
+        moveCalculation(newPosition2);
+        moveCalculation(newPosition3);
+        moveCalculation(newPosition4);
+        moveCalculation(newPosition5);
+        moveCalculation(newPosition6);
+        moveCalculation(newPosition7);
+        moveCalculation(newPosition8);
 
         return availableMoves;
     }

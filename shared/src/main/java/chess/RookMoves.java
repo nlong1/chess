@@ -15,21 +15,21 @@ public class RookMoves {
         this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean onBoardCheck(ChessPosition newPosition){
+    private boolean isOnBoard(ChessPosition newPosition){
         if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
             return true;
         }
         return false;
     }
 
-    private boolean emptySpaceCheck(ChessPosition newPosition){
+    private boolean isEmptySpace(ChessPosition newPosition){
         if (board.getPiece(newPosition) == null){
             return true;
         }
         return false;
     }
 
-    private boolean enemyPieceCheck(ChessPosition newPosition){
+    private boolean isEnemyPiece(ChessPosition newPosition){
         if (board.getPiece(newPosition).getTeamColor() != pieceColor){
             return true;
         }
@@ -48,11 +48,11 @@ public class RookMoves {
 
         for (int i = 1;i<8;i++){
             ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()+i);
-            if (onBoardCheck(newPosition)){
-                if (emptySpaceCheck(newPosition)){
+            if (isOnBoard(newPosition)){
+                if (isEmptySpace(newPosition)){
                     addMove(newPosition);
                 }
-                else if (enemyPieceCheck(newPosition)){
+                else if (isEnemyPiece(newPosition)){
                     addMove(newPosition);
                     break;
                 }
@@ -69,11 +69,11 @@ public class RookMoves {
 
         for (int i = 1;i<8;i++){
             ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()-i);
-            if (onBoardCheck(newPosition)){
-                if (emptySpaceCheck(newPosition)){
+            if (isOnBoard(newPosition)){
+                if (isEmptySpace(newPosition)){
                     addMove(newPosition);
                 }
-                else if (enemyPieceCheck(newPosition)){
+                else if (isEnemyPiece(newPosition)){
                     addMove(newPosition);
                     break;
                 }
@@ -90,11 +90,11 @@ public class RookMoves {
 
         for (int i = 1;i<8;i++){
             ChessPosition newPosition = new ChessPosition(myPosition.getRow()+i,myPosition.getColumn());
-            if (onBoardCheck(newPosition)){
-                if (emptySpaceCheck(newPosition)){
+            if (isOnBoard(newPosition)){
+                if (isEmptySpace(newPosition)){
                     addMove(newPosition);
                 }
-                else if (enemyPieceCheck(newPosition)){
+                else if (isEnemyPiece(newPosition)){
                     addMove(newPosition);
                     break;
                 }
@@ -111,11 +111,11 @@ public class RookMoves {
 
         for (int i = 1;i<8;i++){
             ChessPosition newPosition = new ChessPosition(myPosition.getRow()-i,myPosition.getColumn());
-            if (onBoardCheck(newPosition)){
-                if (emptySpaceCheck(newPosition)){
+            if (isOnBoard(newPosition)){
+                if (isEmptySpace(newPosition)){
                     addMove(newPosition);
                 }
-                else if (enemyPieceCheck(newPosition)){
+                else if (isEnemyPiece(newPosition)){
                     addMove(newPosition);
                     break;
                 }
