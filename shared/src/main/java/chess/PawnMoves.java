@@ -15,27 +15,6 @@ public class PawnMoves {
         this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean isOnBoard(ChessPosition newPosition){
-        if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEmptySpace(ChessPosition newPosition){
-        if (board.getPiece(newPosition) == null){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEnemyPiece(ChessPosition newPosition){
-        if (board.getPiece(newPosition).getTeamColor() != pieceColor){
-            return true;
-        }
-        return false;
-    }
-
     private void addMove(ChessPosition newPosition){
         if ((newPosition.getRow() == 8) || (newPosition.getRow() == 1)){
             ChessMove newMove1 = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.BISHOP);
@@ -58,29 +37,29 @@ public class PawnMoves {
         if (pieceColor == ChessGame.TeamColor.WHITE) {
 //        1 MOVE FORWARD
             ChessPosition forward1 = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn());
-            if (isOnBoard(forward1)){
-                if (isEmptySpace(forward1)){
+            if (PieceMoves.isOnBoard(forward1)){
+                if (PieceMoves.isEmptySpace(forward1,board)){
                     addMove(forward1);
                 }
             }
 //        2 MOVE FORWARD
             ChessPosition forward2 = new ChessPosition(myPosition.getRow()+2,myPosition.getColumn());
-            if (isOnBoard(forward2)){
-                if ((myPosition.getRow()==2) && (!availableMoves.isEmpty()) && (isEmptySpace(forward2))){
+            if (PieceMoves.isOnBoard(forward2)){
+                if ((myPosition.getRow()==2) && (!availableMoves.isEmpty()) && (PieceMoves.isEmptySpace(forward2,board))){
                     addMove(forward2);
                 }
             }
 //        BOTH DIAGONAL
             ChessPosition diag1 = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()-1);
-            if (isOnBoard(diag1)){
-                if(!isEmptySpace(diag1) && isEnemyPiece(diag1)){
+            if (PieceMoves.isOnBoard(diag1)){
+                if(!PieceMoves.isEmptySpace(diag1,board) && PieceMoves.isEnemyPiece(diag1,board,pieceColor)){
                     addMove(diag1);
                 }
             }
 
             ChessPosition diag2 = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()+1);
-            if (isOnBoard(diag2)){
-                if(!isEmptySpace(diag2) && isEnemyPiece(diag2)){
+            if (PieceMoves.isOnBoard(diag2)){
+                if(!PieceMoves.isEmptySpace(diag2,board) && PieceMoves.isEnemyPiece(diag2,board,pieceColor)){
                     addMove(diag2);
                 }
             }
@@ -89,30 +68,30 @@ public class PawnMoves {
         else{
             //        1 MOVE FORWARD
             ChessPosition forward1 = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn());
-            if (isOnBoard(forward1)){
-                if (isEmptySpace(forward1)){
+            if (PieceMoves.isOnBoard(forward1)){
+                if (PieceMoves.isEmptySpace(forward1,board)){
                     addMove(forward1);
                 }
             }
 //        2 MOVE FORWARD
             ChessPosition forward2 = new ChessPosition(myPosition.getRow()-2,myPosition.getColumn());
-            if (isOnBoard(forward2)){
-                if ((myPosition.getRow()==7) && (!availableMoves.isEmpty()) && (isEmptySpace(forward2))){
+            if (PieceMoves.isOnBoard(forward2)){
+                if ((myPosition.getRow()==7) && (!availableMoves.isEmpty()) && (PieceMoves.isEmptySpace(forward2,board))){
                     addMove(forward2);
                 }
             }
         }
 //        BOTH DIAGONAL
         ChessPosition diag1 = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn()-1);
-        if (isOnBoard(diag1)){
-            if(!isEmptySpace(diag1) && isEnemyPiece(diag1)){
+        if (PieceMoves.isOnBoard(diag1)){
+            if(!PieceMoves.isEmptySpace(diag1,board) && PieceMoves.isEnemyPiece(diag1,board,pieceColor)){
                 addMove(diag1);
             }
         }
 
         ChessPosition diag2 = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn()+1);
-        if (isOnBoard(diag2)){
-            if(!isEmptySpace(diag2) && isEnemyPiece(diag2)){
+        if (PieceMoves.isOnBoard(diag2)){
+            if(!PieceMoves.isEmptySpace(diag2,board) && PieceMoves.isEnemyPiece(diag2,board,pieceColor)){
                 addMove(diag2);
             }
         }

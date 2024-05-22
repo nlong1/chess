@@ -15,118 +15,15 @@ public class RookMoves {
         this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean isOnBoard(ChessPosition newPosition){
-        if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEmptySpace(ChessPosition newPosition){
-        if (board.getPiece(newPosition) == null){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEnemyPiece(ChessPosition newPosition){
-        if (board.getPiece(newPosition).getTeamColor() != pieceColor){
-            return true;
-        }
-        return false;
-    }
-
-    private void addMove(ChessPosition newPosition){
-        ChessMove newMove = new ChessMove(myPosition,newPosition,null);
-        availableMoves.add(newMove);
-    }
-
     public Collection<ChessMove> calculator(){
-//        possible moving positions
-
 //      GO TO THE RIGHT
-
-        for (int i = 1;i<8;i++){
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()+i);
-            if (isOnBoard(newPosition)){
-                if (isEmptySpace(newPosition)){
-                    addMove(newPosition);
-                }
-                else if (isEnemyPiece(newPosition)){
-                    addMove(newPosition);
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-            else{
-                break;
-            }
-        }
-
+        PieceMoves.lineCalculation(myPosition,board,availableMoves,pieceColor,0,1);
 //      LEFT
-
-        for (int i = 1;i<8;i++){
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow(),myPosition.getColumn()-i);
-            if (isOnBoard(newPosition)){
-                if (isEmptySpace(newPosition)){
-                    addMove(newPosition);
-                }
-                else if (isEnemyPiece(newPosition)){
-                    addMove(newPosition);
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-            else{
-                break;
-            }
-        }
-
+        PieceMoves.lineCalculation(myPosition,board,availableMoves,pieceColor,0,-1);
 //      UP
-
-        for (int i = 1;i<8;i++){
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow()+i,myPosition.getColumn());
-            if (isOnBoard(newPosition)){
-                if (isEmptySpace(newPosition)){
-                    addMove(newPosition);
-                }
-                else if (isEnemyPiece(newPosition)){
-                    addMove(newPosition);
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-            else{
-                break;
-            }
-        }
-
+        PieceMoves.lineCalculation(myPosition,board,availableMoves,pieceColor,1,0);
 //      DOWN
-
-        for (int i = 1;i<8;i++){
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow()-i,myPosition.getColumn());
-            if (isOnBoard(newPosition)){
-                if (isEmptySpace(newPosition)){
-                    addMove(newPosition);
-                }
-                else if (isEnemyPiece(newPosition)){
-                    addMove(newPosition);
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-            else{
-                break;
-            }
-        }
+        PieceMoves.lineCalculation(myPosition,board,availableMoves,pieceColor,-1,0);
 
         return availableMoves;
     }

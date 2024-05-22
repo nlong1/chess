@@ -15,41 +15,6 @@ public class KingMoves {
         this.pieceColor = board.getPiece(myPosition).getTeamColor();
     }
 
-    private boolean isOnBoard(ChessPosition newPosition){
-        if ((newPosition.getRow()>=1) && (newPosition.getRow()<=8) && (newPosition.getColumn()>=1) && (newPosition.getColumn()<=8)){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEmptySpace(ChessPosition newPosition){
-        if (board.getPiece(newPosition) == null){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isEnemyPiece(ChessPosition newPosition){
-        if (board.getPiece(newPosition).getTeamColor() != pieceColor){
-            return true;
-        }
-        return false;
-    }
-
-    private void moveCalculation (ChessPosition newPosition){
-        if (isOnBoard(newPosition)){
-            if (isEmptySpace(newPosition)){
-                ChessMove newMove = new ChessMove(myPosition,newPosition,null);
-                availableMoves.add(newMove);
-
-            }
-            else if (isEnemyPiece(newPosition)){
-                ChessMove newMove = new ChessMove(myPosition,newPosition,null);
-                availableMoves.add(newMove);
-            }
-        }
-    }
-
     public Collection<ChessMove> calculator(){
 //        possible moving positions
         ChessPosition newPosition1 = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
@@ -61,14 +26,15 @@ public class KingMoves {
         ChessPosition newPosition7 = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
         ChessPosition newPosition8 = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
 
-        moveCalculation(newPosition1);
-        moveCalculation(newPosition2);
-        moveCalculation(newPosition3);
-        moveCalculation(newPosition4);
-        moveCalculation(newPosition5);
-        moveCalculation(newPosition6);
-        moveCalculation(newPosition7);
-        moveCalculation(newPosition8);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition1,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition2,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition3,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition4,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition5,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition6,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition7,board,pieceColor,availableMoves);
+        PieceMoves.moveCalculationKnightOrKing(myPosition,newPosition8,board,pieceColor,availableMoves);
+
 
         return availableMoves;
     }
