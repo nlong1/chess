@@ -1,5 +1,7 @@
 package handler;
 
+import com.google.gson.Gson;
+import responses.LoginResponse;
 import spark.Request;
 import spark.Response;
 
@@ -17,6 +19,6 @@ public class LoginHandler extends AbstractHandler{
     }
 
     public String handleLoginRequest(Request req, Response res){
-        return null;
+        return new Gson().toJson(new LoginResponse(null,null));
     }
 }

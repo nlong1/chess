@@ -1,5 +1,7 @@
 package handler;
 
+import com.google.gson.Gson;
+import responses.JoinGameResponse;
 import spark.Request;
 import spark.Response;
 
@@ -17,6 +19,6 @@ public class JoinGameHandler extends AbstractHandler {
     }
 
     public String handleJoinGameRequest(Request req, Response res){
-        return null;
+        return new Gson().toJson(new JoinGameResponse(null));
     }
 }

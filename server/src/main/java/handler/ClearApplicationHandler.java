@@ -1,5 +1,7 @@
 package handler;
 
+import com.google.gson.Gson;
+import responses.ClearApplicationResponse;
 import spark.Request;
 import spark.Response;
 
@@ -17,6 +19,6 @@ public class ClearApplicationHandler extends AbstractHandler{
     }
 
     public String handleClearApplicationRequest(Request req, Response res){
-        return null;
+        return new Gson().toJson(new ClearApplicationResponse(null));
     }
 }

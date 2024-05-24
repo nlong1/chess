@@ -1,6 +1,5 @@
 package server;
 
-import com.google.gson.Gson;
 import handler.ListGamesHandler;
 import handler.RegisterHandler;
 import handler.JoinGameHandler;
@@ -21,7 +20,6 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-//        RegisterHandler().getInstance().handleRegister(req, res)
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> RegisterHandler.getInstance().handleRegisterRequest(req, res));
         Spark.post("/session", (req, res) -> LoginHandler.getInstance().handleLoginRequest(req, res));

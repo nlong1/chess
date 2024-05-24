@@ -2,6 +2,8 @@ package handler;
 
 import spark.Request;
 import spark.Response;
+import responses.LogoutResponse;
+import com.google.gson.Gson;
 
 public class LogoutHandler extends AbstractHandler{
     private static LogoutHandler singleInstance = null;
@@ -17,6 +19,6 @@ public class LogoutHandler extends AbstractHandler{
     }
 
     public String handleLogoutRequest(Request req, Response res){
-        return null;
+        return new Gson().toJson(new LogoutResponse(null));
     }
 }

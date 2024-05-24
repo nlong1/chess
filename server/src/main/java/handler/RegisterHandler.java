@@ -21,8 +21,7 @@ public class RegisterHandler extends AbstractHandler{
     }
 
     public String handleRegisterRequest(Request req, Response res){
-        String json = new Gson().toJson(req.body());
-        RegisterRequest registerRequest = new Gson().fromJson(json,RegisterRequest.class);
+        RegisterRequest registerRequest = new Gson().fromJson(req.body(),RegisterRequest.class);
         RegisterResponse registerResponse = RegistrationService.getInstance().register(registerRequest);
         return new Gson().toJson(registerResponse);
     }
