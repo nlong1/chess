@@ -31,25 +31,6 @@ public class Server {
         Spark.put("/game",(req, res) -> JoinGameHandler.getInstance().handleJoinGameRequest(req, res));
         Spark.delete("/db", (req,res) -> ClearApplicationHandler.getInstance().handleClearApplicationRequest(req, res));
 
-        Request request;
-        request.body();
-
-        handleRegister(Request req, Response res);
-
-        Response res;
-        res.status(500);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(request);
-        RegisterRequest request = gson.fromJson(RegisterRequest.class, json);
-
-        RegisterServe.getInstance();
-
-        res.body(gson.toJson(registerResponse));
-
-
-        handleRegister(Request req, Response res);
-
         Spark.awaitInitialization();
         return Spark.port();
     }
