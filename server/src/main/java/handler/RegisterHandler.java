@@ -3,6 +3,7 @@ package handler;
 import com.google.gson.Gson;
 import request.RegisterRequest;
 import responses.RegisterResponse;
+import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
@@ -22,8 +23,8 @@ public class RegisterHandler extends AbstractHandler{
     public String handleRegisterRequest(Request req, Response res){
         String json = new Gson().toJson(req.body());
         RegisterRequest registerRequest = new Gson().fromJson(json,RegisterRequest.class);
-
-        return null;
+        RegisterResponse registerResponse = RegistrationService.getInstance().register(registerRequest);
+        return new Gson().toJson(registerResponse);
     }
 
 }
