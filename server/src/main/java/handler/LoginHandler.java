@@ -1,8 +1,12 @@
 package handler;
 
 import com.google.gson.Gson;
+import request.LoginRequest;
+import request.RegisterRequest;
 import responses.JoinGameResponse;
 import responses.LoginResponse;
+import responses.RegisterResponse;
+import service.LoginService;
 import spark.Request;
 import spark.Response;
 
@@ -21,6 +25,11 @@ public class LoginHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-        return new Gson().toJson(new LoginResponse(null,null));
+        LoginRequest loginRequest = toRequest(req,LoginRequest.class);
+        LoginResponse loginResponse;
+
+        loginResponse = LoginService.getInstance().login(loginRequest);
+
+        return responseUpdate(res,loginResponse,loginResponse.message());
     }
 }

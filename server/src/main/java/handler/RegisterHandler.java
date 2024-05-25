@@ -23,11 +23,14 @@ public class RegisterHandler extends AbstractHandler{
     @Override
     public String handleRequest(Request req, Response res) {
         RegisterRequest registerRequest = toRequest(req,RegisterRequest.class);
+        RegisterResponse registerResponse;
+
         if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null){
-            RegisterResponse registerResponse = new RegisterResponse(null,null,"Error: bad request");
-            return responseUpdate(res,registerResponse,registerResponse.message());
+            registerResponse = new RegisterResponse(null, null, "Error: bad request");
         }
-        RegisterResponse registerResponse = RegistrationService.getInstance().register(registerRequest);
+        else {
+            registerResponse = RegistrationService.getInstance().register(registerRequest);
+        }
         return responseUpdate(res,registerResponse,registerResponse.message());
     }
 }

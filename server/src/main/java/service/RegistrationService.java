@@ -25,7 +25,7 @@ public class RegistrationService {
             return new RegisterResponse(registerRequest.username(),authToken,null);
         }
         else{
-            return new RegisterResponse(null,null,null);
+            return new RegisterResponse(null,null,"Error: already taken");
         }
     }
 }

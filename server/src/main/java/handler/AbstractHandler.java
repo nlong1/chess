@@ -28,10 +28,13 @@ public abstract class AbstractHandler {
         switch (message){
             case "Error: bad request":
                 res.status(400);
+                return;
             case "Error: unauthorized":
                 res.status(401);
+                return;
             case "Error: already taken":
                 res.status(403);
+                return;
             default:
                 res.status(500);
 
