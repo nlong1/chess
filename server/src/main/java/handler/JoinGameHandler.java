@@ -18,7 +18,8 @@ public class JoinGameHandler extends AbstractHandler {
         return singleInstance;
     }
 
-    public String handleJoinGameRequest(Request req, Response res){
+    @Override
+    public String handleRequest(Request req, Response res){
         return new Gson().toJson(new JoinGameResponse(null));
     }
 }

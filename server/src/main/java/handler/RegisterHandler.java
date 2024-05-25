@@ -20,10 +20,14 @@ public class RegisterHandler extends AbstractHandler{
         return singleInstance;
     }
 
-    public String handleRegisterRequest(Request req, Response res){
-        RegisterRequest registerRequest = new Gson().fromJson(req.body(),RegisterRequest.class);
+    @Override
+    public String handleRequest(Request req, Response res) {
+        RegisterRequest registerRequest = toRequest(req,RegisterRequest.class);
+        if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null){
+            RegisterResponse registerResponse = new RegisterResponse(null,null,"Error: bad request");
+            return responseUpdate(res,registerResponse,registerResponse.message());
+        }
         RegisterResponse registerResponse = RegistrationService.getInstance().register(registerRequest);
-        return new Gson().toJson(registerResponse);
+        return responseUpdate(res,registerResponse,registerResponse.message());
     }
-
 }

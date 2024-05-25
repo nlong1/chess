@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import responses.CreateGameResponse;
+import responses.JoinGameResponse;
 import spark.Request;
 import spark.Response;
 
@@ -18,7 +19,9 @@ public class CreateGameHandler extends AbstractHandler{
         return singleInstance;
     }
 
-    public String handleCreateGameRequest(Request req, Response res){
+    @Override
+    public String handleRequest(Request req, Response res){
         return new Gson().toJson(new CreateGameResponse(null));
     }
+
 }

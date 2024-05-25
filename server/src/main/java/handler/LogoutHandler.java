@@ -1,5 +1,6 @@
 package handler;
 
+import responses.JoinGameResponse;
 import spark.Request;
 import spark.Response;
 import responses.LogoutResponse;
@@ -18,7 +19,9 @@ public class LogoutHandler extends AbstractHandler{
         return singleInstance;
     }
 
-    public String handleLogoutRequest(Request req, Response res){
+    @Override
+    public String handleRequest(Request req, Response res){
         return new Gson().toJson(new LogoutResponse(null));
     }
+
 }
