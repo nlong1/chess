@@ -55,8 +55,7 @@ public class ServiceTests {
         LoginRequest logReq = new LoginRequest("bob","jasdf");
         LoginResponse logRes = LoginService.getInstance().login(logReq);
         String authToken = logRes.authToken();
-        LogoutRequest logoutRequest = new LogoutRequest(authToken);
-        LogoutResponse logoutResponse = LogoutService.getInstance().logout(logoutRequest);
+        LogoutResponse logoutResponse = LogoutService.getInstance().logout(authToken);
         Assertions.assertNull(logoutResponse.message());
     }
 
@@ -66,9 +65,8 @@ public class ServiceTests {
         RegistrationService.getInstance().register(regReq);
         LoginRequest logReq = new LoginRequest("bob","jasdf");
         LoginResponse logRes = LoginService.getInstance().login(logReq);
-        String authToken = logRes.authToken();
-        LogoutRequest logoutRequest = new LogoutRequest("fakeAuthToken");
-        LogoutResponse logoutResponse = LogoutService.getInstance().logout(logoutRequest);
+        String authToken = "beans";
+        LogoutResponse logoutResponse = LogoutService.getInstance().logout(authToken);
         Assertions.assertEquals(logoutResponse.message(),"Error: unauthorized");
     }
 }

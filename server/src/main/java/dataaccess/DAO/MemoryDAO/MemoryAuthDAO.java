@@ -37,6 +37,7 @@ public class MemoryAuthDAO implements AuthDAO {
             String authToken = hexString.toString();
             AuthData authData = new AuthData(authToken,username);
             auth.put(authToken,authData);
+            System.out.println(authToken);
             return authToken;
         } catch (NoSuchAlgorithmException e) {
             // Handle the case where SHA-256 algorithm is not available

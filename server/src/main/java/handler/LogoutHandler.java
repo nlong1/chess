@@ -1,10 +1,14 @@
 package handler;
 
+import com.google.gson.Gson;
+import org.eclipse.jetty.util.log.Log;
 import request.LogoutRequest;
 import service.LogoutService;
 import spark.Request;
 import spark.Response;
 import responses.LogoutResponse;
+
+import java.util.Set;
 
 public class LogoutHandler extends AbstractHandler{
     private static LogoutHandler singleInstance = null;
@@ -21,16 +25,15 @@ public class LogoutHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-        LogoutRequest logoutRequest = toRequest(req,LogoutRequest.class);
+//         System.out.println(req.headers("Host"));
+        String authToken = "";
         LogoutResponse logoutResponse;
-
-        if (logoutRequest == null || logoutRequest.authtoken() == null) {
-            logoutResponse = new LogoutResponse("Error: unauthorized");
+        if (authToken == null){
+            logoutResponse = new LogoutResponse("Error: bad request");
         }
         else{
-            logoutResponse = LogoutService.getInstance().logout(logoutRequest);
+            logoutResponse = LogoutService.getInstance().logout(authToken);
         }
-
         return responseUpdate(res,logoutResponse,logoutResponse.message());
     }
 

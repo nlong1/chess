@@ -17,8 +17,7 @@ public class LogoutService {
         return singleInstance;
     }
 
-    public LogoutResponse logout(LogoutRequest logoutRequest) {
-        String authToken = logoutRequest.authtoken();
+    public LogoutResponse logout(String authToken) {
         if (!MemoryAuthDAO.getInstance().getAuth(authToken)){
             return new LogoutResponse("Error: unauthorized");
         }
