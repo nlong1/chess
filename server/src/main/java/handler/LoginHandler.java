@@ -1,11 +1,7 @@
 package handler;
 
-import com.google.gson.Gson;
 import request.LoginRequest;
-import request.RegisterRequest;
-import responses.JoinGameResponse;
 import responses.LoginResponse;
-import responses.RegisterResponse;
 import service.LoginService;
 import spark.Request;
 import spark.Response;

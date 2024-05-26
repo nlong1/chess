@@ -1,7 +1,5 @@
 package dataaccess.DAO;
 
-import model.UserData;
-
 public interface UserDAO {
     String getUser(String username);
 

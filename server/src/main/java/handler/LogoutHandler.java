@@ -1,15 +1,10 @@
 package handler;
 
-import request.LoginRequest;
 import request.LogoutRequest;
-import responses.JoinGameResponse;
-import responses.LoginResponse;
-import service.LoginService;
 import service.LogoutService;
 import spark.Request;
 import spark.Response;
 import responses.LogoutResponse;
-import com.google.gson.Gson;
 
 public class LogoutHandler extends AbstractHandler{
     private static LogoutHandler singleInstance = null;

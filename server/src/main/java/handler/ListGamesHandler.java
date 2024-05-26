@@ -1,7 +1,6 @@
 package handler;
 
 import com.google.gson.Gson;
-import responses.JoinGameResponse;
 import responses.ListGamesResponse;
 import spark.Request;
 import spark.Response;

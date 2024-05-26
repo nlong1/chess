@@ -1,6 +1,5 @@
 package handler;
 
-import com.google.gson.Gson;
 import request.RegisterRequest;
 import responses.RegisterResponse;
 import service.RegistrationService;
