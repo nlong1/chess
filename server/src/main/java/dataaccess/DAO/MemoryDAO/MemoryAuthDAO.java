@@ -44,4 +44,12 @@ public class MemoryAuthDAO implements AuthDAO {
         }
     }
 
+    public boolean getAuth(String authToken){
+        return auth.containsKey(authToken);
+    }
+
+    public void deleteAuth(String authToken){
+        auth.remove(authToken);
+    }
+
 }

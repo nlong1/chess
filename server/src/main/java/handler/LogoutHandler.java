@@ -1,6 +1,11 @@
 package handler;
 
+import request.LoginRequest;
+import request.LogoutRequest;
 import responses.JoinGameResponse;
+import responses.LoginResponse;
+import service.LoginService;
+import service.LogoutService;
 import spark.Request;
 import spark.Response;
 import responses.LogoutResponse;
@@ -21,7 +26,17 @@ public class LogoutHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-        return new Gson().toJson(new LogoutResponse(null));
+        LogoutRequest logoutRequest = toRequest(req,LogoutRequest.class);
+        LogoutResponse logoutResponse;
+
+        if (logoutRequest == null || logoutRequest.authtoken() == null) {
+            logoutResponse = new LogoutResponse("Error: unauthorized");
+        }
+        else{
+            logoutResponse = LogoutService.getInstance().logout(logoutRequest);
+        }
+
+        return responseUpdate(res,logoutResponse,logoutResponse.message());
     }
 
 }
