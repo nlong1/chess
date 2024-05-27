@@ -5,19 +5,18 @@ import dataaccess.DAO.GameDataAccessObject;
 import model.GameData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class MemoryGameDataAccessObject implements GameDataAccessObject {
-    private static MemoryGameDataAccessObject singleInstance = null;
+public class memoryGameDataAccessObject implements GameDataAccessObject {
+    private static memoryGameDataAccessObject singleInstance = null;
     private static ArrayList<GameData> games = new ArrayList<>();
 
-    private MemoryGameDataAccessObject(){
+    private memoryGameDataAccessObject(){
     }
 
-    public static MemoryGameDataAccessObject getInstance(){
+    public static memoryGameDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new MemoryGameDataAccessObject();
+            singleInstance = new memoryGameDataAccessObject();
         }
         return singleInstance;
     }

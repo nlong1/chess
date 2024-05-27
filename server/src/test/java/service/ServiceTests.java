@@ -1,7 +1,5 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.MemoryGameDataAccessObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +8,8 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import responses.*;
+
+import java.util.ArrayList;
 
 public class ServiceTests {
 
@@ -143,6 +143,28 @@ public class ServiceTests {
 
     @Test
     public void testListGames(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
+        ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(defaultUserAuthToken);
+        Assertions.assertNull(listGamesResponse.message());
 
+    }
+
+    @Test
+    public void testListGamesNoGames(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(defaultUserAuthToken);
+        Assertions.assertEquals(new ArrayList<>(),listGamesResponse.games());
     }
 }

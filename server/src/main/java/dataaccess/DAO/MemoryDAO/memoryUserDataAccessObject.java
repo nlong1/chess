@@ -4,16 +4,16 @@ import dataaccess.DAO.UserDataAccessObject;
 import java.util.HashMap;
 import model.UserData;
 
-public class MemoryUserDataAccessObject implements UserDataAccessObject {
-    private static MemoryUserDataAccessObject singleInstance = null;
+public class memoryUserDataAccessObject implements UserDataAccessObject {
+    private static memoryUserDataAccessObject singleInstance = null;
     private HashMap<String,UserData> users = new HashMap<>();
 
-    private MemoryUserDataAccessObject(){
+    private memoryUserDataAccessObject(){
     }
 
-    public static MemoryUserDataAccessObject getInstance(){
+    public static memoryUserDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new MemoryUserDataAccessObject();
+            singleInstance = new memoryUserDataAccessObject();
         }
         return singleInstance;
     }

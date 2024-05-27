@@ -1,8 +1,8 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.MemoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.MemoryGameDataAccessObject;
-import dataaccess.DAO.MemoryDAO.MemoryUserDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryGameDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryUserDataAccessObject;
 import responses.ClearApplicationResponse;
 
 public class ClearApplicationService {
@@ -19,9 +19,9 @@ public class ClearApplicationService {
     }
 
     public ClearApplicationResponse clear(){
-        MemoryAuthDataAccessObject.getInstance().clear();
-        MemoryUserDataAccessObject.getInstance().clear();
-        MemoryGameDataAccessObject.getInstance().clear();
+        memoryAuthDataAccessObject.getInstance().clear();
+        memoryUserDataAccessObject.getInstance().clear();
+        memoryGameDataAccessObject.getInstance().clear();
         return new ClearApplicationResponse(null);
     }
 }

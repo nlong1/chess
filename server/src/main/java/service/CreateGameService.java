@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.MemoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.MemoryGameDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryGameDataAccessObject;
 import request.CreateGameRequest;
 import responses.CreateGameResponse;
 
@@ -20,11 +20,11 @@ public class CreateGameService {
     public CreateGameResponse createGame(String authToken, CreateGameRequest createGameRequest){
         String gameName = createGameRequest.gameName();
         CreateGameResponse createGameResponse;
-        if (!MemoryAuthDataAccessObject.getInstance().getAuth(authToken)){
+        if (!memoryAuthDataAccessObject.getInstance().getAuth(authToken)){
             createGameResponse = new CreateGameResponse(null,"Error: unauthorized");
         }
         else {
-            int gameId = MemoryGameDataAccessObject.getInstance().makeGame(gameName);
+            int gameId = memoryGameDataAccessObject.getInstance().makeGame(gameName);
             createGameResponse = new CreateGameResponse(gameId,null);
         }
         return createGameResponse;

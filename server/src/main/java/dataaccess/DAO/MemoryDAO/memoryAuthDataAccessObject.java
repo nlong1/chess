@@ -7,17 +7,17 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 
-public class MemoryAuthDataAccessObject implements AuthDataAccessObject {
-    private static MemoryAuthDataAccessObject singleInstance = null;
+public class memoryAuthDataAccessObject implements AuthDataAccessObject {
+    private static memoryAuthDataAccessObject singleInstance = null;
     private final HashMap<String, AuthData> auth = new HashMap<>();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
-    private MemoryAuthDataAccessObject(){
+    private memoryAuthDataAccessObject(){
     }
 
-    public static MemoryAuthDataAccessObject getInstance(){
+    public static memoryAuthDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new MemoryAuthDataAccessObject();
+            singleInstance = new memoryAuthDataAccessObject();
         }
         return singleInstance;
     }

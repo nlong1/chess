@@ -1,9 +1,8 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.MemoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.MemoryGameDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryGameDataAccessObject;
 import model.GameData;
-import responses.JoinGameResponse;
 import responses.ListGamesResponse;
 
 import java.util.List;
@@ -22,11 +21,11 @@ public class ListGamesService {
     }
     public ListGamesResponse listGames(String authToken){
         ListGamesResponse listGamesResponse;
-        if (!MemoryAuthDataAccessObject.getInstance().getAuth(authToken)){
+        if (!memoryAuthDataAccessObject.getInstance().getAuth(authToken)){
             listGamesResponse = new ListGamesResponse(null,"Error: unauthorized");
         }
         else{
-            List<GameData> games = MemoryGameDataAccessObject.getInstance().listGames();
+            List<GameData> games = memoryGameDataAccessObject.getInstance().listGames();
             listGamesResponse = new ListGamesResponse(games,null);
         }
         return listGamesResponse;

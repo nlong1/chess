@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.MemoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.MemoryUserDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.MemoryDAO.memoryUserDataAccessObject;
 import request.LoginRequest;
 import responses.LoginResponse;
 
@@ -24,15 +24,15 @@ public class LoginService {
         if (loginRequest.username() == null || loginRequest.password() == null){
             return new LoginResponse(null,null,"Error: bad request");
         }
-        String user = MemoryUserDataAccessObject.getInstance().getUser(loginRequest.username());
+        String user = memoryUserDataAccessObject.getInstance().getUser(loginRequest.username());
         if (user == null){
             return new LoginResponse(null,null,"Error: unauthorized");
         }
-        String password = MemoryUserDataAccessObject.getInstance().getPassword(loginRequest.username());
+        String password = memoryUserDataAccessObject.getInstance().getPassword(loginRequest.username());
         if (!Objects.equals(loginRequest.password(), password)){
             return new LoginResponse(null,null,"Error: unauthorized");
         }
-        String authToken = MemoryAuthDataAccessObject.getInstance().createAuth(user);
+        String authToken = memoryAuthDataAccessObject.getInstance().createAuth(user);
         return new LoginResponse(user,authToken,null);
     }
 }
