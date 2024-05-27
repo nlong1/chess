@@ -86,7 +86,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameResponse createGameResponse = CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        Assertions.assertEquals(0,createGameResponse.gameID());
+        Assertions.assertEquals(1,createGameResponse.gameID());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
         JoinGameResponse joinGameResponse = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         Assertions.assertNull(joinGameResponse.message());
     }
@@ -119,9 +119,9 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
-        JoinGameRequest joinGameReq = new JoinGameRequest("WHITE",0);
+        JoinGameRequest joinGameReq = new JoinGameRequest("WHITE",1);
         JoinGameResponse joinGameRes = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameReq);
         Assertions.assertEquals("Error: already taken",joinGameRes.message());
     }
@@ -135,7 +135,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         ClearApplicationResponse clearApplicationResponse = ClearApplicationService.getInstance().clear();
         Assertions.assertNull(clearApplicationResponse.message());
@@ -150,7 +150,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(defaultUserAuthToken);
         Assertions.assertNull(listGamesResponse.message());

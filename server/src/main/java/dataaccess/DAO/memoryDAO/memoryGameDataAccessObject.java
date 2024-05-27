@@ -3,7 +3,6 @@ package dataaccess.DAO.memoryDAO;
 import chess.ChessGame;
 import dataaccess.DAO.GameDataAccessObject;
 import model.GameData;
-
 import java.util.ArrayList;
 
 
@@ -22,23 +21,24 @@ public class memoryGameDataAccessObject implements GameDataAccessObject {
     }
 
     public boolean gameExists(int gameId){
+        gameId -= 1;
         return (0<=gameId && gameId <games.size());
     }
 
     public GameData getGame(int gameId){
-        return games.get(gameId);
+        return games.get(gameId-1);
     }
 
     public int makeGame(String gameName){
         int gameId = games.size();
         ChessGame chessGame = new ChessGame();
-        GameData gameData = new GameData(gameId,null,null,gameName,chessGame);
+        GameData gameData = new GameData(gameId+1,null,null,gameName,chessGame);
         games.add(gameData);
-        return gameId;
+        return gameId+1;
     }
 
     public void updateGame(int gameId, GameData updatedGame){
-        games.set(gameId,updatedGame);
+        games.set(gameId-1,updatedGame);
     }
 
     public void clear(){
