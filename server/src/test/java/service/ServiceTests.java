@@ -140,4 +140,9 @@ public class ServiceTests {
         ClearApplicationResponse clearApplicationResponse = ClearApplicationService.getInstance().clear();
         Assertions.assertNull(clearApplicationResponse.message());
     }
+
+    @Test
+    public void testListGames(){
+
+    }
 }

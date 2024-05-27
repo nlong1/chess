@@ -5,6 +5,7 @@ import dataaccess.DAO.GameDataAccessObject;
 import model.GameData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MemoryGameDataAccessObject implements GameDataAccessObject {
@@ -43,5 +44,9 @@ public class MemoryGameDataAccessObject implements GameDataAccessObject {
 
     public void clear(){
         games.clear();
+    }
+
+    public ArrayList<GameData> listGames(){
+        return games;
     }
 }

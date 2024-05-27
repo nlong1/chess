@@ -1,7 +1,7 @@
 package handler;
 
-import com.google.gson.Gson;
 import responses.ListGamesResponse;
+import service.ListGamesService;
 import spark.Request;
 import spark.Response;
 
@@ -20,6 +20,8 @@ public class ListGamesHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-        return new Gson().toJson(new ListGamesResponse(null));
+        String authToken = req.headers("authorization");
+        ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(authToken);
+        return responseUpdate(res,listGamesResponse,listGamesResponse.message());
     }
 }
