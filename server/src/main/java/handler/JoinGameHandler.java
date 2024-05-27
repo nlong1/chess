@@ -1,9 +1,15 @@
 package handler;
 
 import com.google.gson.Gson;
+import request.CreateGameRequest;
+import request.JoinGameRequest;
+import responses.CreateGameResponse;
 import responses.JoinGameResponse;
+import service.JoinGameService;
 import spark.Request;
 import spark.Response;
+
+import java.util.Objects;
 
 public class JoinGameHandler extends AbstractHandler {
     private static JoinGameHandler singleInstance = null;
@@ -21,7 +27,14 @@ public class JoinGameHandler extends AbstractHandler {
     @Override
     public String handleRequest(Request req, Response res){
         String authToken = req.headers("authorization");
-        System.out.println(authToken);
-        return new Gson().toJson(new JoinGameResponse(null));
+        JoinGameRequest joinGameRequest = toRequest(req,JoinGameRequest.class);
+        JoinGameResponse joinGameResponse;
+        if (!Objects.equals(joinGameRequest.color(), "WHITE") && !Objects.equals(joinGameRequest.color(), "BLACK")){
+            joinGameResponse = new JoinGameResponse("Error: bad request");
+        }
+        else{
+            joinGameResponse = JoinGameService.getInstance().joinGame(authToken,joinGameRequest);
+        }
+        return responseUpdate(res,joinGameResponse,joinGameResponse.message());
     }
 }

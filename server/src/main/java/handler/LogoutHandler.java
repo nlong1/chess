@@ -1,8 +1,5 @@
 package handler;
 
-import com.google.gson.Gson;
-import org.eclipse.jetty.util.log.Log;
-import request.LogoutRequest;
 import service.LogoutService;
 import spark.Request;
 import spark.Response;

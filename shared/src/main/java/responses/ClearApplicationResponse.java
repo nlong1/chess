@@ -1,4 +1,4 @@
 package responses;
 
-public record ClearApplicationResponse(String none) {
+public record ClearApplicationResponse(String message) {
 }

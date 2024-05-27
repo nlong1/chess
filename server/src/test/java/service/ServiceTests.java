@@ -1,15 +1,22 @@
 package service;
 
+import dataaccess.DAO.MemoryDAO.MemoryGameDataAccessObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
-import request.LogoutRequest;
 import request.RegisterRequest;
-import responses.LoginResponse;
-import responses.LogoutResponse;
-import responses.RegisterResponse;
+import responses.*;
 
 public class ServiceTests {
+
+    @BeforeEach
+    public void clearAll(){
+        ClearApplicationService.getInstance().clear();
+    }
 
     @Test
     public void testRegularRegistration(){
@@ -68,5 +75,69 @@ public class ServiceTests {
         String authToken = "beans";
         LogoutResponse logoutResponse = LogoutService.getInstance().logout(authToken);
         Assertions.assertEquals(logoutResponse.message(),"Error: unauthorized");
+    }
+
+    @Test
+    public void testCreateGame(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameResponse createGameResponse = CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        Assertions.assertEquals(0,createGameResponse.gameID());
+    }
+
+    @Test
+    public void testCreateGameInvalidAuth(){
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameResponse createGameResponse = CreateGameService.getInstance().createGame("bad",createGameRequest);
+        Assertions.assertEquals(createGameResponse.message(),"Error: unauthorized");
+    }
+
+    @Test
+    public void testJoinGame(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameResponse joinGameResponse = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
+        Assertions.assertNull(joinGameResponse.message());
+    }
+
+    @Test
+    public void testJoinGameTaken(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
+        JoinGameRequest joinGameReq = new JoinGameRequest("WHITE",0);
+        JoinGameResponse joinGameRes = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameReq);
+        Assertions.assertEquals("Error: already taken",joinGameRes.message());
+    }
+
+    @Test
+    public void testClearEverything(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",0);
+        JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
+        ClearApplicationResponse clearApplicationResponse = ClearApplicationService.getInstance().clear();
+        Assertions.assertNull(clearApplicationResponse.message());
     }
 }

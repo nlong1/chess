@@ -1,19 +1,19 @@
 package dataaccess.DAO.MemoryDAO;
 
-import dataaccess.DAO.UserDAO;
+import dataaccess.DAO.UserDataAccessObject;
 import java.util.HashMap;
 import model.UserData;
 
-public class MemoryUserDAO implements UserDAO {
-    private static MemoryUserDAO singleInstance = null;
+public class MemoryUserDataAccessObject implements UserDataAccessObject {
+    private static MemoryUserDataAccessObject singleInstance = null;
     private HashMap<String,UserData> users = new HashMap<>();
 
-    private MemoryUserDAO(){
+    private MemoryUserDataAccessObject(){
     }
 
-    public static MemoryUserDAO getInstance(){
+    public static MemoryUserDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new MemoryUserDAO();
+            singleInstance = new MemoryUserDataAccessObject();
         }
         return singleInstance;
     }
@@ -36,6 +36,10 @@ public class MemoryUserDAO implements UserDAO {
     public void createUser(String username, String password, String email){
         UserData user = new UserData(username,password,email);
         users.put(username,user);
+    }
+
+    public void clear(){
+        users.clear();
     }
 
 }

@@ -1,7 +1,9 @@
 package handler;
 
 import com.google.gson.Gson;
+import request.CreateGameRequest;
 import responses.CreateGameResponse;
+import service.CreateGameService;
 import spark.Request;
 import spark.Response;
 
@@ -20,7 +22,18 @@ public class CreateGameHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-        return new Gson().toJson(new CreateGameResponse(null));
+        String authToken = req.headers("authorization");
+        CreateGameRequest createGameRequest = toRequest(req,CreateGameRequest.class);
+        CreateGameResponse createGameResponse;
+
+        if (createGameRequest.gameName() == null){
+            createGameResponse = new CreateGameResponse(null,"Error: bad request");
+        }
+        else{
+            createGameResponse = CreateGameService.getInstance().createGame(authToken,createGameRequest);
+        }
+
+        return responseUpdate(res,createGameResponse,createGameResponse.message());
     }
 
 }

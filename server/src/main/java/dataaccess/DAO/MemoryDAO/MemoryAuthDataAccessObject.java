@@ -1,23 +1,23 @@
 package dataaccess.DAO.MemoryDAO;
 
-import dataaccess.DAO.AuthDAO;
+import dataaccess.DAO.AuthDataAccessObject;
 import model.AuthData;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 
-public class MemoryAuthDAO implements AuthDAO {
-    private static MemoryAuthDAO singleInstance = null;
+public class MemoryAuthDataAccessObject implements AuthDataAccessObject {
+    private static MemoryAuthDataAccessObject singleInstance = null;
     private final HashMap<String, AuthData> auth = new HashMap<>();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
-    private MemoryAuthDAO(){
+    private MemoryAuthDataAccessObject(){
     }
 
-    public static MemoryAuthDAO getInstance(){
+    public static MemoryAuthDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new MemoryAuthDAO();
+            singleInstance = new MemoryAuthDataAccessObject();
         }
         return singleInstance;
     }
@@ -38,6 +38,14 @@ public class MemoryAuthDAO implements AuthDAO {
 
     public void deleteAuth(String authToken){
         auth.remove(authToken);
+    }
+
+    public String getUsername(String authToken){
+        return auth.get(authToken).username();
+    }
+
+    public void clear(){
+        auth.clear();
     }
 
 }
