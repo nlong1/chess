@@ -1,4 +1,4 @@
-package dataaccess.DAO.MemoryDAO;
+package dataaccess.DAO.memoryDAO;
 
 import chess.ChessGame;
 import dataaccess.DAO.GameDataAccessObject;

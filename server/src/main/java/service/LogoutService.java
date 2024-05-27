@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
 import responses.LogoutResponse;
 
 public class LogoutService {

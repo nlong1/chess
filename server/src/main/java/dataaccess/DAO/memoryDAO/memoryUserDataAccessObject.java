@@ -1,4 +1,4 @@
-package dataaccess.DAO.MemoryDAO;
+package dataaccess.DAO.memoryDAO;
 
 import dataaccess.DAO.UserDataAccessObject;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.memoryUserDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryUserDataAccessObject;
 import request.RegisterRequest;
 import responses.RegisterResponse;
 

@@ -1,8 +1,8 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.memoryGameDataAccessObject;
-import dataaccess.DAO.MemoryDAO.memoryUserDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryGameDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryUserDataAccessObject;
 import responses.ClearApplicationResponse;
 
 public class ClearApplicationService {

@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.DAO.MemoryDAO.memoryAuthDataAccessObject;
-import dataaccess.DAO.MemoryDAO.memoryGameDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
+import dataaccess.DAO.memoryDAO.memoryGameDataAccessObject;
 import request.CreateGameRequest;
 import responses.CreateGameResponse;
 
