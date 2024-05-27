@@ -20,6 +20,8 @@ public class JoinGameHandler extends AbstractHandler {
 
     @Override
     public String handleRequest(Request req, Response res){
+        String authToken = req.headers("authorization");
+        System.out.println(authToken);
         return new Gson().toJson(new JoinGameResponse(null));
     }
 }

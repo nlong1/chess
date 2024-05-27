@@ -2,14 +2,15 @@ package dataaccess.DAO.MemoryDAO;
 
 import dataaccess.DAO.AuthDAO;
 import model.AuthData;
+
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.HashMap;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.nio.charset.StandardCharsets;
 
 public class MemoryAuthDAO implements AuthDAO {
     private static MemoryAuthDAO singleInstance = null;
-    private HashMap<String, AuthData> auth = new HashMap<>();
+    private final HashMap<String, AuthData> auth = new HashMap<>();
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
     private MemoryAuthDAO(){
     }
@@ -22,27 +23,13 @@ public class MemoryAuthDAO implements AuthDAO {
     }
 
     public String createAuth(String username) {
-        try {
-            // Calculate SHA-256 hash of the input string
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digestBytes = md.digest(username.getBytes(StandardCharsets.UTF_8));
-
-            // Convert byte array to hexadecimal string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : digestBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            String authToken = hexString.toString();
+            byte[] randomBytes = new byte[24];
+            SecureRandom secureRandom = new SecureRandom();
+            secureRandom.nextBytes(randomBytes);
+            String authToken = base64Encoder.encodeToString(randomBytes);
             AuthData authData = new AuthData(authToken,username);
             auth.put(authToken,authData);
-            System.out.println(authToken);
             return authToken;
-        } catch (NoSuchAlgorithmException e) {
-            // Handle the case where SHA-256 algorithm is not available
-            throw new RuntimeException("SHA-256 algorithm not found", e);
-        }
     }
 
     public boolean getAuth(String authToken){

@@ -25,15 +25,9 @@ public class LogoutHandler extends AbstractHandler{
 
     @Override
     public String handleRequest(Request req, Response res){
-//         System.out.println(req.headers("Host"));
-        String authToken = "";
+        String authToken = req.headers("authorization");
         LogoutResponse logoutResponse;
-        if (authToken == null){
-            logoutResponse = new LogoutResponse("Error: bad request");
-        }
-        else{
-            logoutResponse = LogoutService.getInstance().logout(authToken);
-        }
+        logoutResponse = LogoutService.getInstance().logout(authToken);
         return responseUpdate(res,logoutResponse,logoutResponse.message());
     }
 
