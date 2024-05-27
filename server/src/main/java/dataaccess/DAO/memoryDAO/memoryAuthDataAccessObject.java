@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class memoryAuthDataAccessObject implements AuthDataAccessObject {
     private static memoryAuthDataAccessObject singleInstance = null;
     private final HashMap<String, AuthData> auth = new HashMap<>();
-    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+    private static final Base64.Encoder encoder = Base64.getUrlEncoder();
 
     private memoryAuthDataAccessObject(){
     }
@@ -26,7 +26,7 @@ public class memoryAuthDataAccessObject implements AuthDataAccessObject {
             byte[] randomBytes = new byte[24];
             SecureRandom secureRandom = new SecureRandom();
             secureRandom.nextBytes(randomBytes);
-            String authToken = base64Encoder.encodeToString(randomBytes);
+            String authToken = encoder.encodeToString(randomBytes);
             AuthData authData = new AuthData(authToken,username);
             auth.put(authToken,authData);
             return authToken;
