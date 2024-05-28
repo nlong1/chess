@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MemoryGameDataAccessObject implements GameDataAccessObject {
     private static MemoryGameDataAccessObject singleInstance = null;
-    private static final ArrayList<GameData> arrayGames = new ArrayList<>();
+    private static final ArrayList<GameData> ARRAY_GAMES = new ArrayList<>();
 
     private MemoryGameDataAccessObject(){
     }
@@ -22,33 +22,33 @@ public class MemoryGameDataAccessObject implements GameDataAccessObject {
 
     public boolean gameExists(int gameId){
         int gameIndex = gameId-1;
-        if (arrayGames.isEmpty()){
+        if (ARRAY_GAMES.isEmpty()){
             return false;
         }
-        return (0 <= gameIndex && gameIndex <arrayGames.size());
+        return (0 <= gameIndex && gameIndex <ARRAY_GAMES.size());
     }
 
     public GameData getGame(int gameId){
-        return arrayGames.get(gameId-1);
+        return ARRAY_GAMES.get(gameId-1);
     }
 
     public int makeGame(String gameName){
-        int gameId = arrayGames.size() + 1;
+        int gameId = ARRAY_GAMES.size() + 1;
         ChessGame chessGame = new ChessGame();
         GameData gameData = new GameData(gameId,null,null,gameName,chessGame);
-        arrayGames.add(gameData);
+        ARRAY_GAMES.add(gameData);
         return gameId;
     }
 
     public void updateGame(int gameId, GameData updatedGame){
-        arrayGames.set(gameId-1,updatedGame);
+        ARRAY_GAMES.set(gameId-1,updatedGame);
     }
 
     public void clear(){
-        arrayGames.clear();
+        ARRAY_GAMES.clear();
     }
 
     public ArrayList<GameData> listGames(){
-        return arrayGames;
+        return ARRAY_GAMES;
     }
 }
