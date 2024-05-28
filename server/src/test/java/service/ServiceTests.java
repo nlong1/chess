@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
         JoinGameResponse joinGameResponse = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         Assertions.assertNull(joinGameResponse.message());
     }
@@ -119,9 +120,9 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
-        JoinGameRequest joinGameReq = new JoinGameRequest("WHITE",1);
+        JoinGameRequest joinGameReq = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
         JoinGameResponse joinGameRes = JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameReq);
         Assertions.assertEquals("Error: already taken",joinGameRes.message());
     }
@@ -135,7 +136,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         ClearApplicationResponse clearApplicationResponse = ClearApplicationService.getInstance().clear();
         Assertions.assertNull(clearApplicationResponse.message());
@@ -150,7 +151,7 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest("beans");
         CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE",1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
         JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
         ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(defaultUserAuthToken);
         Assertions.assertNull(listGamesResponse.message());
@@ -166,5 +167,38 @@ public class ServiceTests {
         String defaultUserAuthToken = loginResponse.authToken();
         ListGamesResponse listGamesResponse = ListGamesService.getInstance().listGames(defaultUserAuthToken);
         Assertions.assertEquals(new ArrayList<>(),listGamesResponse.games());
+    }
+
+    @Test
+    public void testJoinGameFull(){
+        RegisterRequest registerRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("username","password");
+        LoginResponse loginResponse = LoginService.getInstance().login(loginRequest);
+        String defaultUserAuthToken = loginResponse.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest("beans");
+        CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE,1);
+        JoinGameService.getInstance().joinGame(defaultUserAuthToken,joinGameRequest);
+
+
+
+        RegisterRequest regRequest = new RegisterRequest("username","password","email");
+        RegistrationService.getInstance().register(regRequest);
+        LoginResponse loginRes = LoginService.getInstance().login(loginRequest);
+        String newAuthToken = loginResponse.authToken();
+        JoinGameRequest joinGameReq = new JoinGameRequest(ChessGame.TeamColor.BLACK,1);
+        JoinGameResponse joinGameRes = JoinGameService.getInstance().joinGame(newAuthToken,joinGameReq);
+        Assertions.assertNull(joinGameRes.message());
+        JoinGameResponse joinGameResponseAgain = JoinGameService.getInstance().joinGame(newAuthToken,joinGameReq);
+        Assertions.assertEquals("Error: already taken",joinGameResponseAgain.message());
+
+
+        CreateGameRequest createGameReq = new CreateGameRequest("beans");
+        CreateGameResponse createGameResponse= CreateGameService.getInstance().createGame(defaultUserAuthToken,createGameReq);
+        Assertions.assertEquals(2,createGameResponse.gameID());
+
+
+
     }
 }

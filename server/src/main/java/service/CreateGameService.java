@@ -21,12 +21,11 @@ public class CreateGameService {
         String gameName = createGameRequest.gameName();
         CreateGameResponse createGameResponse;
         if (!memoryAuthDataAccessObject.getInstance().getAuth(authToken)){
-            createGameResponse = new CreateGameResponse(null,"Error: unauthorized");
+            return new CreateGameResponse(null,"Error: unauthorized");
         }
         else {
             int gameId = memoryGameDataAccessObject.getInstance().makeGame(gameName);
-            createGameResponse = new CreateGameResponse(gameId,null);
+            return new CreateGameResponse(gameId,null);
         }
-        return createGameResponse;
     }
 }

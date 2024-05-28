@@ -24,14 +24,7 @@ public class CreateGameHandler extends AbstractHandler{
     public String handleRequest(Request req, Response res){
         String authToken = req.headers("authorization");
         CreateGameRequest createGameRequest = toRequest(req,CreateGameRequest.class);
-        CreateGameResponse createGameResponse;
-
-        if (createGameRequest.gameName() == null){
-            createGameResponse = new CreateGameResponse(null,"Error: bad request");
-        }
-        else{
-            createGameResponse = CreateGameService.getInstance().createGame(authToken,createGameRequest);
-        }
+        CreateGameResponse createGameResponse = CreateGameService.getInstance().createGame(authToken,createGameRequest);
 
         return responseUpdate(res,createGameResponse,createGameResponse.message());
     }

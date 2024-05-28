@@ -2,5 +2,5 @@ package request;
 
 import chess.ChessGame;
 
-public record JoinGameRequest(String color,int gameId) {
+public record JoinGameRequest(ChessGame.TeamColor color,int gameId) {
 }
