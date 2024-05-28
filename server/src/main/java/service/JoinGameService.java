@@ -7,8 +7,6 @@ import model.GameData;
 import request.JoinGameRequest;
 import responses.JoinGameResponse;
 
-import java.util.Objects;
-
 public class JoinGameService {
     private static JoinGameService singleInstance = null;
 

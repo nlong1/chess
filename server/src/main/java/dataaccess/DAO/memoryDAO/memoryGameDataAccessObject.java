@@ -22,6 +22,9 @@ public class memoryGameDataAccessObject implements GameDataAccessObject {
 
     public boolean gameExists(int gameId){
         int gameIndex = gameId-1;
+        if (games.isEmpty()){
+            return false;
+        }
         return (0 <= gameIndex && gameIndex <games.size());
     }
 
