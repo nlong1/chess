@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
+import dataaccess.dao.memorydao.MemoryAuthDataAccessObject;
 import responses.LogoutResponse;
 
 public class LogoutService {
@@ -17,11 +17,11 @@ public class LogoutService {
     }
 
     public LogoutResponse logout(String authToken) {
-        if (!memoryAuthDataAccessObject.getInstance().getAuth(authToken)){
+        if (!MemoryAuthDataAccessObject.getInstance().getAuth(authToken)){
             return new LogoutResponse("Error: unauthorized");
         }
         else {
-            memoryAuthDataAccessObject.getInstance().deleteAuth(authToken);
+            MemoryAuthDataAccessObject.getInstance().deleteAuth(authToken);
             return new LogoutResponse(null);
         }
     }

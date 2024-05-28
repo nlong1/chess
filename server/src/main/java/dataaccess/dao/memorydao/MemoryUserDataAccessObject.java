@@ -1,19 +1,19 @@
-package dataaccess.DAO.memoryDAO;
+package dataaccess.dao.memorydao;
 
-import dataaccess.DAO.UserDataAccessObject;
+import dataaccess.dao.UserDataAccessObject;
 import java.util.HashMap;
 import model.UserData;
 
-public class memoryUserDataAccessObject implements UserDataAccessObject {
-    private static memoryUserDataAccessObject singleInstance = null;
+public class MemoryUserDataAccessObject implements UserDataAccessObject {
+    private static MemoryUserDataAccessObject singleInstance = null;
     private HashMap<String,UserData> users = new HashMap<>();
 
-    private memoryUserDataAccessObject(){
+    private MemoryUserDataAccessObject(){
     }
 
-    public static memoryUserDataAccessObject getInstance(){
+    public static MemoryUserDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new memoryUserDataAccessObject();
+            singleInstance = new MemoryUserDataAccessObject();
         }
         return singleInstance;
     }

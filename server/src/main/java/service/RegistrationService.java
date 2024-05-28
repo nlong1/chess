@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.DAO.memoryDAO.memoryAuthDataAccessObject;
-import dataaccess.DAO.memoryDAO.memoryUserDataAccessObject;
+import dataaccess.dao.memorydao.MemoryAuthDataAccessObject;
+import dataaccess.dao.memorydao.MemoryUserDataAccessObject;
 import request.RegisterRequest;
 import responses.RegisterResponse;
 
@@ -19,9 +19,9 @@ public class RegistrationService {
     }
 
     public RegisterResponse register(RegisterRequest registerRequest){
-        if (memoryUserDataAccessObject.getInstance().getUser(registerRequest.username()) == null){
-            memoryUserDataAccessObject.getInstance().createUser(registerRequest.username(),registerRequest.password(),registerRequest.email());
-            String authToken = memoryAuthDataAccessObject.getInstance().createAuth(registerRequest.username());
+        if (MemoryUserDataAccessObject.getInstance().getUser(registerRequest.username()) == null){
+            MemoryUserDataAccessObject.getInstance().createUser(registerRequest.username(),registerRequest.password(),registerRequest.email());
+            String authToken = MemoryAuthDataAccessObject.getInstance().createAuth(registerRequest.username());
             return new RegisterResponse(registerRequest.username(),authToken,null);
         }
         else{

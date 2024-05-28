@@ -1,4 +1,4 @@
-package dataaccess.DAO;
+package dataaccess.dao;
 
 public interface UserDataAccessObject {
     String getUser(String username);

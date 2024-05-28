@@ -1,23 +1,23 @@
-package dataaccess.DAO.memoryDAO;
+package dataaccess.dao.memorydao;
 
-import dataaccess.DAO.AuthDataAccessObject;
+import dataaccess.dao.AuthDataAccessObject;
 import model.AuthData;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 
-public class memoryAuthDataAccessObject implements AuthDataAccessObject {
-    private static memoryAuthDataAccessObject singleInstance = null;
+public class MemoryAuthDataAccessObject implements AuthDataAccessObject {
+    private static MemoryAuthDataAccessObject singleInstance = null;
     private final HashMap<String, AuthData> auth = new HashMap<>();
-    private static final Base64.Encoder encoder = Base64.getUrlEncoder();
+    private static final Base64.Encoder Encoder = Base64.getUrlEncoder();
 
-    private memoryAuthDataAccessObject(){
+    private MemoryAuthDataAccessObject(){
     }
 
-    public static memoryAuthDataAccessObject getInstance(){
+    public static MemoryAuthDataAccessObject getInstance(){
         if (singleInstance == null){
-            singleInstance = new memoryAuthDataAccessObject();
+            singleInstance = new MemoryAuthDataAccessObject();
         }
         return singleInstance;
     }
@@ -26,7 +26,7 @@ public class memoryAuthDataAccessObject implements AuthDataAccessObject {
             byte[] randomBytes = new byte[24];
             SecureRandom secureRandom = new SecureRandom();
             secureRandom.nextBytes(randomBytes);
-            String authToken = encoder.encodeToString(randomBytes);
+            String authToken = Encoder.encodeToString(randomBytes);
             AuthData authData = new AuthData(authToken,username);
             auth.put(authToken,authData);
             return authToken;
