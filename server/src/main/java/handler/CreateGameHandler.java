@@ -25,7 +25,6 @@ public class CreateGameHandler extends AbstractHandler{
         String authToken = req.headers("authorization");
         CreateGameRequest createGameRequest = toRequest(req,CreateGameRequest.class);
         CreateGameResponse createGameResponse = CreateGameService.getInstance().createGame(authToken,createGameRequest);
-
         return responseUpdate(res,createGameResponse,createGameResponse.message());
     }
 

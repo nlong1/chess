@@ -24,21 +24,30 @@ public class JoinGameService {
         if (!memoryAuthDataAccessObject.getInstance().getAuth(authToken)) {
             return new JoinGameResponse("Error: unauthorized");
         }
+        if (joinGameRequest.gameID() == null){
+            return new JoinGameResponse("Error: bad request");
+        }
         else {
-            int gameId = joinGameRequest.gameId();
-            ChessGame.TeamColor color = joinGameRequest.color();
+            Integer gameID = joinGameRequest.gameID();
+            System.out.println("\ngame Id for request in Join game: ");
+            System.out.println(gameID);
+            System.out.println("\n");
+            ChessGame.TeamColor color = joinGameRequest.playerColor();
             String username = memoryAuthDataAccessObject.getInstance().getUsername(authToken);
-            if (!memoryGameDataAccessObject.getInstance().gameExists(gameId)) {
+            if (!memoryGameDataAccessObject.getInstance().gameExists(gameID)) {
                 return new JoinGameResponse("Error: bad request");
             }
-            GameData gameData = memoryGameDataAccessObject.getInstance().getGame(gameId);
+            GameData gameData = memoryGameDataAccessObject.getInstance().getGame(gameID);
+            if (color == null){
+                return new JoinGameResponse("Error: bad request");
+            }
             if (color == ChessGame.TeamColor.WHITE && gameData.whiteUsername() == null) {
-                GameData newGameData = new GameData(gameId, username, gameData.blackUsername(), gameData.gameName(), gameData.game());
-                memoryGameDataAccessObject.getInstance().updateGame(gameId, newGameData);
+                GameData newGameData = new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game());
+                memoryGameDataAccessObject.getInstance().updateGame(gameID, newGameData);
             }
             else if (color == ChessGame.TeamColor.BLACK && gameData.blackUsername() == null) {
-                GameData newGameData = new GameData(gameId, gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
-                memoryGameDataAccessObject.getInstance().updateGame(gameId, newGameData);
+                GameData newGameData = new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+                memoryGameDataAccessObject.getInstance().updateGame(gameID, newGameData);
             }
             else {
                 return new JoinGameResponse("Error: already taken");

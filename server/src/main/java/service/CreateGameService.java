@@ -24,8 +24,11 @@ public class CreateGameService {
             return new CreateGameResponse(null,"Error: unauthorized");
         }
         else {
-            int gameId = memoryGameDataAccessObject.getInstance().makeGame(gameName);
-            return new CreateGameResponse(gameId,null);
+            Integer gameID = memoryGameDataAccessObject.getInstance().makeGame(gameName);
+            System.out.println("\nreturned game Id after making game: ");
+            System.out.println(gameID);
+            System.out.println("\n");
+            return new CreateGameResponse(gameID,null);
         }
     }
 }
