@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MemoryGameDataAccessObject implements GameDataAccessObject {
     private static MemoryGameDataAccessObject singleInstance = null;
-    private static final ArrayList<GameData> Games = new ArrayList<>();
+    private static final ArrayList<GameData> arrayGames = new ArrayList<>();
 
     private MemoryGameDataAccessObject(){
     }
@@ -22,33 +22,33 @@ public class MemoryGameDataAccessObject implements GameDataAccessObject {
 
     public boolean gameExists(int gameId){
         int gameIndex = gameId-1;
-        if (Games.isEmpty()){
+        if (arrayGames.isEmpty()){
             return false;
         }
-        return (0 <= gameIndex && gameIndex <Games.size());
+        return (0 <= gameIndex && gameIndex <arrayGames.size());
     }
 
     public GameData getGame(int gameId){
-        return Games.get(gameId-1);
+        return arrayGames.get(gameId-1);
     }
 
     public int makeGame(String gameName){
-        int gameId = Games.size() + 1;
+        int gameId = arrayGames.size() + 1;
         ChessGame chessGame = new ChessGame();
         GameData gameData = new GameData(gameId,null,null,gameName,chessGame);
-        Games.add(gameData);
+        arrayGames.add(gameData);
         return gameId;
     }
 
     public void updateGame(int gameId, GameData updatedGame){
-        Games.set(gameId-1,updatedGame);
+        arrayGames.set(gameId-1,updatedGame);
     }
 
     public void clear(){
-        Games.clear();
+        arrayGames.clear();
     }
 
     public ArrayList<GameData> listGames(){
-        return Games;
+        return arrayGames;
     }
 }
