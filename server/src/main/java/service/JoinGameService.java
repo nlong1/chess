@@ -29,9 +29,6 @@ public class JoinGameService {
         }
         else {
             Integer gameID = joinGameRequest.gameID();
-            System.out.println("\ngame Id for request in Join game: ");
-            System.out.println(gameID);
-            System.out.println("\n");
             ChessGame.TeamColor color = joinGameRequest.playerColor();
             String username = MemoryAuthDataAccessObject.getInstance().getUsername(authToken);
             if (!MemoryGameDataAccessObject.getInstance().gameExists(gameID)) {
