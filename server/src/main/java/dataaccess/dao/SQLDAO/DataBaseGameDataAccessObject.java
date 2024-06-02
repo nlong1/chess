@@ -10,7 +10,7 @@ import model.GameData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class DataBaseGameDataAcessObject implements GameDataAccessObject {
+public class DataBaseGameDataAccessObject implements GameDataAccessObject {
 
     public boolean gameExists(int gameId) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {

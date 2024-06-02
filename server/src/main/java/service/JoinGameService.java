@@ -1,6 +1,13 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
+import dataaccess.dao.AuthDataAccessObject;
+import dataaccess.dao.GameDataAccessObject;
+import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
+import dataaccess.dao.SQLDAO.DataBaseGameDataAccessObject;
+import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
+import dataaccess.dao.UserDataAccessObject;
 import dataaccess.dao.memorydao.MemoryAuthDataAccessObject;
 import dataaccess.dao.memorydao.MemoryGameDataAccessObject;
 import model.GameData;
@@ -9,6 +16,8 @@ import responses.JoinGameResponse;
 
 public class JoinGameService {
     private static JoinGameService singleInstance = null;
+    private final AuthDataAccessObject auth = new DataBaseAuthDataAccessObject();
+    private final GameDataAccessObject game = new DataBaseGameDataAccessObject();
 
     private JoinGameService() {
     }
@@ -21,35 +30,37 @@ public class JoinGameService {
     }
 
     public JoinGameResponse joinGame(String authToken, JoinGameRequest joinGameRequest) {
-        if (!MemoryAuthDataAccessObject.getInstance().getAuth(authToken)) {
-            return new JoinGameResponse("Error: unauthorized");
-        }
-        if (joinGameRequest.gameID() == null){
-            return new JoinGameResponse("Error: bad request");
-        }
-        else {
-            Integer gameID = joinGameRequest.gameID();
-            ChessGame.TeamColor color = joinGameRequest.playerColor();
-            String username = MemoryAuthDataAccessObject.getInstance().getUsername(authToken);
-            if (!MemoryGameDataAccessObject.getInstance().gameExists(gameID)) {
+        try {
+            if (!auth.getAuth(authToken)) {
+                return new JoinGameResponse("Error: unauthorized");
+            }
+            if (joinGameRequest.gameID() == null) {
                 return new JoinGameResponse("Error: bad request");
+            } else {
+                Integer gameID = joinGameRequest.gameID();
+                ChessGame.TeamColor color = joinGameRequest.playerColor();
+                String username = auth.getUsername(authToken);
+                if (!game.gameExists(gameID)) {
+                    return new JoinGameResponse("Error: bad request");
+                }
+                GameData gameData = game.getGame(gameID);
+                if (color == null) {
+                    return new JoinGameResponse("Error: bad request");
+                }
+                if (color == ChessGame.TeamColor.WHITE && gameData.whiteUsername() == null) {
+                    GameData newGameData = new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game());
+                    game.updateGame(gameID, newGameData);
+                } else if (color == ChessGame.TeamColor.BLACK && gameData.blackUsername() == null) {
+                    GameData newGameData = new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+                    game.updateGame(gameID, newGameData);
+                } else {
+                    return new JoinGameResponse("Error: already taken");
+                }
+                return new JoinGameResponse(null);
             }
-            GameData gameData = MemoryGameDataAccessObject.getInstance().getGame(gameID);
-            if (color == null){
-                return new JoinGameResponse("Error: bad request");
-            }
-            if (color == ChessGame.TeamColor.WHITE && gameData.whiteUsername() == null) {
-                GameData newGameData = new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game());
-                MemoryGameDataAccessObject.getInstance().updateGame(gameID, newGameData);
-            }
-            else if (color == ChessGame.TeamColor.BLACK && gameData.blackUsername() == null) {
-                GameData newGameData = new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
-                MemoryGameDataAccessObject.getInstance().updateGame(gameID, newGameData);
-            }
-            else {
-                return new JoinGameResponse("Error: already taken");
-            }
-            return new JoinGameResponse(null);
+        }
+        catch (DataAccessException e){
+            return new JoinGameResponse(e.getMessage());
         }
     }
 }

@@ -5,16 +5,13 @@ import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDataAccessObject;
 import dataaccess.dao.GameDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
-import dataaccess.dao.SQLDAO.DataBaseGameDataAcessObject;
+import dataaccess.dao.SQLDAO.DataBaseGameDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
 import dataaccess.dao.UserDataAccessObject;
 import model.GameData;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
 
 import java.util.ArrayList;
 
@@ -24,7 +21,7 @@ public class DatabaseUnitTests {
 
     private final AuthDataAccessObject authDataAccessObject = new DataBaseAuthDataAccessObject();
     private final UserDataAccessObject userDataAccessObject = new DataBaseUserDataAccessObject();
-    private final GameDataAccessObject gameDataAccessObject = new DataBaseGameDataAcessObject();
+    private final GameDataAccessObject gameDataAccessObject = new DataBaseGameDataAccessObject();
 
     @Test
     @Order(1)
