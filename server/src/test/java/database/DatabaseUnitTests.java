@@ -5,9 +5,12 @@ import dataaccess.dao.AuthDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
 import dataaccess.dao.UserDataAccessObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -145,9 +148,17 @@ public class DatabaseUnitTests {
     @Order(14)
     @DisplayName("Create User Test 2")
     public void createUserTest2() throws DataAccessException {
+        boolean pass = true;
         userDataAccessObject.clear();
         userDataAccessObject.createUser("user", "pass", "email");
-        assertEquals("pass",userDataAccessObject.getPassword("user"));
+        try{
+            userDataAccessObject.createUser("user", "pass", "email");
+            pass = false;
+        }
+        catch (DataAccessException e){
+            pass = true;
+        }
+        assertTrue(pass);
     }
 
     @Test
