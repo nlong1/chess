@@ -1,9 +1,11 @@
 package dataaccess.dao;
 
+import dataaccess.DataAccessException;
+
 public interface AuthDataAccessObject {
-    String createAuth(String username);
-    boolean getAuth(String authToken);
-    void deleteAuth(String authToken);
-    String getUsername(String authToken);
-    void clear();
+    String createAuth(String username) throws DataAccessException;
+    boolean getAuth(String authToken) throws DataAccessException;
+    void deleteAuth(String authToken) throws DataAccessException;
+    String getUsername(String authToken) throws DataAccessException;
+    void clear() throws DataAccessException;
 }

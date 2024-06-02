@@ -23,13 +23,17 @@ public class MemoryAuthDataAccessObject implements AuthDataAccessObject {
     }
 
     public String createAuth(String username) {
-            byte[] randomBytes = new byte[24];
-            SecureRandom secureRandom = new SecureRandom();
-            secureRandom.nextBytes(randomBytes);
-            String authToken = GOOD_ENCODER.encodeToString(randomBytes);
-            AuthData authData = new AuthData(authToken,username);
+        String authToken = getAuthTokenString();
+        AuthData authData = new AuthData(authToken,username);
             auth.put(authToken,authData);
             return authToken;
+    }
+
+    private static String getAuthTokenString() {
+        byte[] randomBytes = new byte[24];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(randomBytes);
+        return GOOD_ENCODER.encodeToString(randomBytes);
     }
 
     public boolean getAuth(String authToken){
