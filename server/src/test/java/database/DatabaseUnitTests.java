@@ -3,6 +3,8 @@ package database;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
+import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
+import dataaccess.dao.UserDataAccessObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DatabaseUnitTests {
 
     private final AuthDataAccessObject authDataAccessObject = new DataBaseAuthDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = new DataBaseUserDataAccessObject();
 
     @Test
     @Order(1)
@@ -113,6 +116,75 @@ public class DatabaseUnitTests {
         String authToken2 = authDataAccessObject.createAuth("rice");
         assertEquals("beans",authDataAccessObject.getUsername(authToken1));
         assertEquals("rice",authDataAccessObject.getUsername(authToken2));
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Clear User Table Test 1")
+    public void clearUserTableTest1() throws DataAccessException {
+        userDataAccessObject.clear();
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Create User Test 1")
+    public void createUserTest1() throws DataAccessException {
+        userDataAccessObject.clear();
+        userDataAccessObject.createUser("user","pass","email");
+        assertEquals("pass",userDataAccessObject.getPassword("user"));
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("Clear User Table Test 2")
+    public void clearUserTableTest2() throws DataAccessException {
+        userDataAccessObject.clear();
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("Create User Test 2")
+    public void createUserTest2() throws DataAccessException {
+        userDataAccessObject.clear();
+        userDataAccessObject.createUser("user", "pass", "email");
+        assertEquals("pass",userDataAccessObject.getPassword("user"));
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("getPassword Test 1")
+    public void getPasswordTest1() throws DataAccessException {
+        userDataAccessObject.clear();
+        userDataAccessObject.createUser("user", "pass", "email");
+        assertEquals("pass",userDataAccessObject.getPassword("user"));
+        assertEquals("pass",userDataAccessObject.getPassword("user"));
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("getPassword Test 2")
+    public void getPasswordTest2() throws DataAccessException {
+        userDataAccessObject.clear();
+        userDataAccessObject.createUser("badUser", "p", "email");
+        userDataAccessObject.createUser("user", "pass", "email");
+        assertNotEquals("pass",userDataAccessObject.getPassword("badUser"));
+    }
+
+    @Test
+    @Order(17)
+    @DisplayName("Verify Username Exists 1")
+    public void verifyUsernameExistsTest() throws DataAccessException {
+        userDataAccessObject.clear();
+        userDataAccessObject.createUser("user", "pass", "email");
+        assertEquals("user",userDataAccessObject.getUser("user"));
+    }
+
+    @Test
+    @Order(18)
+    @DisplayName("Username Doesn't Exists 1")
+    public void usernameNoExistTest() throws DataAccessException {
+        userDataAccessObject.clear();
+        assertNull(userDataAccessObject.getUser("user"));
     }
 
 }
