@@ -1,10 +1,14 @@
 package database;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDataAccessObject;
+import dataaccess.dao.GameDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
+import dataaccess.dao.SQLDAO.DataBaseGameDataAcessObject;
 import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
 import dataaccess.dao.UserDataAccessObject;
+import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -12,12 +16,15 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseUnitTests {
 
     private final AuthDataAccessObject authDataAccessObject = new DataBaseAuthDataAccessObject();
     private final UserDataAccessObject userDataAccessObject = new DataBaseUserDataAccessObject();
+    private final GameDataAccessObject gameDataAccessObject = new DataBaseGameDataAcessObject();
 
     @Test
     @Order(1)
@@ -196,6 +203,108 @@ public class DatabaseUnitTests {
     public void usernameNoExistTest() throws DataAccessException {
         userDataAccessObject.clear();
         assertNull(userDataAccessObject.getUser("user"));
+    }
+
+    @Test
+    @Order(19)
+    @DisplayName("Create Game Test 1")
+    public void createGameTest1() throws DataAccessException {
+        int gameID = gameDataAccessObject.makeGame("yee");
+        System.out.println(gameID);
+        assertNotEquals(0,gameID);
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("Create Game Test 2")
+    public void createGameTest2() throws DataAccessException {
+        int gameID1 = gameDataAccessObject.makeGame("yee");
+        int gameID2 = gameDataAccessObject.makeGame("yee");
+        assertNotEquals(gameID2,gameID1);
+    }
+
+    @Test
+    @Order(21)
+    @DisplayName("Clear Game Test 1")
+    public void clearTest2() throws DataAccessException {
+        gameDataAccessObject.clear();
+    }
+
+    @Test
+    @Order(22)
+    @DisplayName("Game Exists Test 1")
+    public void gameExistsTest1() throws DataAccessException {
+        int gameID = gameDataAccessObject.makeGame("yee");
+        assertTrue(gameDataAccessObject.gameExists(gameID));
+    }
+
+    @Test
+    @Order(23)
+    @DisplayName("Game Exists Test 2")
+    public void gameExistsTest2() throws DataAccessException {
+        int gameID = 523;
+        assertFalse(gameDataAccessObject.gameExists(gameID));
+    }
+
+    @Test
+    @Order(24)
+    @DisplayName("Get Game Test 1")
+    public void getGameTest1() throws DataAccessException {
+        gameDataAccessObject.clear();
+        int gameID = gameDataAccessObject.makeGame("yee");
+        GameData game = gameDataAccessObject.getGame(gameID);
+        assertNull(game.blackUsername());
+    }
+
+    @Test
+    @Order(25)
+    @DisplayName("Get Game Test 2")
+    public void getGameTest2() throws DataAccessException {
+        gameDataAccessObject.clear();
+        int gameID = gameDataAccessObject.makeGame("yee");
+        GameData game = gameDataAccessObject.getGame(gameID);
+        assertNotNull(game.gameName());
+    }
+
+    @Test
+    @Order(26)
+    @DisplayName("Update Game Test 1")
+    public void updateGameTest1() throws DataAccessException {
+        gameDataAccessObject.clear();
+        int gameID = gameDataAccessObject.makeGame("game");
+        GameData game = new GameData(gameID,"beans","wow","game",new ChessGame());
+        gameDataAccessObject.updateGame(gameID,game);
+        GameData returnedGame = gameDataAccessObject.getGame(gameID);
+        assertEquals("beans",returnedGame.whiteUsername());
+    }
+
+    @Test
+    @Order(27)
+    @DisplayName("Update Game Test 2")
+    public void updateGameTest2() throws DataAccessException {
+        gameDataAccessObject.clear();
+        int gameID = gameDataAccessObject.makeGame("game");
+        GameData game = new GameData(gameID,null,"wow",null,new ChessGame());
+        gameDataAccessObject.updateGame(gameID,game);
+        GameData returnedGame = gameDataAccessObject.getGame(gameID);
+        assertNull(returnedGame.whiteUsername());
+    }
+
+    @Test
+    @Order(28)
+    @DisplayName("List Games Test 1")
+    public void listGameTest1() throws DataAccessException {
+        gameDataAccessObject.clear();
+        int gameID = gameDataAccessObject.makeGame("game");
+        assertNotNull(gameDataAccessObject.listGames());
+    }
+
+    @Test
+    @Order(29)
+    @DisplayName("List Games Test 2")
+    public void listGameTest2() throws DataAccessException {
+        gameDataAccessObject.clear();
+        assertEquals(new ArrayList<>(),gameDataAccessObject.listGames());
     }
 
 }

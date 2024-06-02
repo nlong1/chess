@@ -1,18 +1,19 @@
 package dataaccess.dao;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import model.GameData;
 
 import java.util.ArrayList;
 
 public interface GameDataAccessObject {
-    boolean gameExists(int gameId);
-    GameData getGame(int gameId);
-    int makeGame(String gameName);
+    boolean gameExists(int gameId) throws DataAccessException;
+    GameData getGame(int gameId) throws DataAccessException;
+    int makeGame(String gameName) throws DataAccessException;
 
-    void updateGame(int gameId, GameData updatedGame);
+    void updateGame(int gameId, GameData updatedGame) throws DataAccessException;
 
-    void clear();
+    void clear() throws DataAccessException;
 
-    ArrayList<GameData> listGames();
+    ArrayList<GameData> listGames() throws DataAccessException;
 }
