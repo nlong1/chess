@@ -9,6 +9,7 @@ import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
 import dataaccess.dao.UserDataAccessObject;
 import dataaccess.dao.memorydao.MemoryAuthDataAccessObject;
 import dataaccess.dao.memorydao.MemoryUserDataAccessObject;
+import org.mindrot.jbcrypt.BCrypt;
 import request.LoginRequest;
 import responses.LoginResponse;
 
@@ -39,7 +40,7 @@ public class LoginService {
                 return new LoginResponse(null, null, "Error: unauthorized");
             }
             String password = userDataAccessObject.getPassword(loginRequest.username());
-            if (!Objects.equals(loginRequest.password(), password)) {
+            if (!BCrypt.checkpw(loginRequest.password(), password)) {
                 return new LoginResponse(null, null, "Error: unauthorized");
             }
             String authToken = auth.createAuth(user);
