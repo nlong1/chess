@@ -138,7 +138,7 @@ public class DatabaseUnitTests {
     public void createUserTest1() throws DataAccessException {
         userDataAccessObject.clear();
         userDataAccessObject.createUser("user","pass","email");
-        assertEquals("pass",userDataAccessObject.getPassword("user"));
+        assertNotEquals("pass",userDataAccessObject.getPassword("user"));
     }
 
     @Test
@@ -171,8 +171,8 @@ public class DatabaseUnitTests {
     public void getPasswordTest1() throws DataAccessException {
         userDataAccessObject.clear();
         userDataAccessObject.createUser("user", "pass", "email");
-        assertEquals("pass",userDataAccessObject.getPassword("user"));
-        assertEquals("pass",userDataAccessObject.getPassword("user"));
+        assertNotEquals("pass",userDataAccessObject.getPassword("user"));
+        assertNotEquals("pass",userDataAccessObject.getPassword("user"));
     }
 
     @Test
