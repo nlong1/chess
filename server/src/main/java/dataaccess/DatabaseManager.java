@@ -8,7 +8,7 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
-    private final String[] createStatements = {
+    private static final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (
               `authToken` varchar(256) NOT NULL,
@@ -59,10 +59,7 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Creates the database if it does not already exist.
-     */
-    void createTables() throws Exception{
+    static void createTables() throws Exception{
         try {
             var conn = DatabaseManager.getConnection();
             for (var statement : createStatements) {
@@ -76,15 +73,23 @@ public class DatabaseManager {
         }
     }
 
-    void createDatabase() throws DataAccessException {
+    /**
+     * Creates the database if it does not already exist.
+     */
+    public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
-            createTables();
         } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        try{
+            createTables();
+        }
+        catch (Exception e){
             throw new DataAccessException(e.getMessage());
         }
     }

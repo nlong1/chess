@@ -1,5 +1,7 @@
 package server;
 
+import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import handler.ListGamesHandler;
 import handler.RegisterHandler;
 import handler.JoinGameHandler;
@@ -28,7 +30,12 @@ public class Server {
         Spark.post("/game", (req, res) -> CreateGameHandler.getInstance().handleRequest(req, res));
         Spark.put("/game",(req, res) -> JoinGameHandler.getInstance().handleRequest(req, res));
         Spark.delete("/db", (req,res) -> ClearApplicationHandler.getInstance().handleRequest(req, res));
-
+        try {
+            DatabaseManager.createDatabase();
+        }
+        catch (DataAccessException e){
+            System.out.println("Database loading failed");
+        }
         Spark.awaitInitialization();
         return Spark.port();
     }
