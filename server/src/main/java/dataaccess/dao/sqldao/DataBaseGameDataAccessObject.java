@@ -50,7 +50,7 @@ public class DataBaseGameDataAccessObject implements GameDataAccessObject {
     }
 
     public int makeGame(String gameName) throws DataAccessException {
-        int Id = 0;
+        int iD = 0;
         try (var conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement("INSERT INTO game (gameName,game) values (?,?)")) {
                 ChessGame game = new ChessGame();
@@ -61,9 +61,9 @@ public class DataBaseGameDataAccessObject implements GameDataAccessObject {
                 try (var getIdStatement = conn.prepareStatement("SELECT LAST_INSERT_ID();")){
                     var rs = getIdStatement.executeQuery();
                     if (rs.next()){
-                        Id = rs.getInt(1);
+                        iD = rs.getInt(1);
                     }
-                    return Id;
+                    return iD;
                 }
             }
         } catch (SQLException e) {
