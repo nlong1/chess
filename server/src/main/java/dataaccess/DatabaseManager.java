@@ -33,7 +33,7 @@ public class DatabaseManager {
               `blackUsername` varchar(256),
               `gameName` varchar(256),
               `game` longtext,
-              PRIMARY KEY (`username`)
+              PRIMARY KEY (`gameID`)
             )
             """};
 
