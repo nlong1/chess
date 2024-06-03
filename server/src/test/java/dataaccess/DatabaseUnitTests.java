@@ -1,7 +1,6 @@
-package database;
+package dataaccess;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDataAccessObject;
 import dataaccess.dao.GameDataAccessObject;
 import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
