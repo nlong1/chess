@@ -1,4 +1,4 @@
-package dataaccess.dao.SQLDAO;
+package dataaccess.dao.sqldao;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
@@ -50,7 +50,7 @@ public class DataBaseGameDataAccessObject implements GameDataAccessObject {
     }
 
     public int makeGame(String gameName) throws DataAccessException {
-        int ID = 0;
+        int Id = 0;
         try (var conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement("INSERT INTO game (gameName,game) values (?,?)")) {
                 ChessGame game = new ChessGame();
@@ -58,12 +58,12 @@ public class DataBaseGameDataAccessObject implements GameDataAccessObject {
                 preparedStatement.setString(1,gameName);
                 preparedStatement.setString(2,gameString);
                 preparedStatement.executeUpdate();
-                try (var getIDStatement = conn.prepareStatement("SELECT LAST_INSERT_ID();")){
-                    var rs = getIDStatement.executeQuery();
+                try (var getIdStatement = conn.prepareStatement("SELECT LAST_INSERT_ID();")){
+                    var rs = getIdStatement.executeQuery();
                     if (rs.next()){
-                        ID = rs.getInt(1);
+                        Id = rs.getInt(1);
                     }
-                    return ID;
+                    return Id;
                 }
             }
         } catch (SQLException e) {

@@ -1,4 +1,4 @@
-package dataaccess.dao.SQLDAO;
+package dataaccess.dao.sqldao;
 
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;

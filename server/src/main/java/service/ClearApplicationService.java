@@ -3,13 +3,10 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDataAccessObject;
 import dataaccess.dao.GameDataAccessObject;
-import dataaccess.dao.SQLDAO.DataBaseAuthDataAccessObject;
-import dataaccess.dao.SQLDAO.DataBaseGameDataAccessObject;
-import dataaccess.dao.SQLDAO.DataBaseUserDataAccessObject;
+import dataaccess.dao.sqldao.DataBaseAuthDataAccessObject;
+import dataaccess.dao.sqldao.DataBaseGameDataAccessObject;
+import dataaccess.dao.sqldao.DataBaseUserDataAccessObject;
 import dataaccess.dao.UserDataAccessObject;
-import dataaccess.dao.memorydao.MemoryAuthDataAccessObject;
-import dataaccess.dao.memorydao.MemoryGameDataAccessObject;
-import dataaccess.dao.memorydao.MemoryUserDataAccessObject;
 import responses.ClearApplicationResponse;
 
 public class ClearApplicationService {
