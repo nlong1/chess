@@ -101,7 +101,7 @@ public class DataBaseGameDataAccessObject implements GameDataAccessObject {
     public ArrayList<GameData> listGames() throws DataAccessException {
         ArrayList<GameData> games = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("SELECT * FROM GAME")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT * FROM game")) {
                 var rs = preparedStatement.executeQuery();
                 while (rs.next()){
                     int gameId = rs.getInt("gameID");
