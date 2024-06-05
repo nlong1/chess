@@ -5,6 +5,8 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import ui.EscapeSequences;
 
 public class Printer {
@@ -24,8 +26,11 @@ public class Printer {
     public static final String empty = EscapeSequences.EMPTY;
 
     public static final String blackText = EscapeSequences.SET_TEXT_COLOR_BLACK;
+    public static final String darkGreyText = EscapeSequences.SET_TEXT_COLOR_DARK_GREY;
+    public static final String lightGreyText = EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
+    public static final String blueText = EscapeSequences.SET_TEXT_COLOR_BLUE;
     public static final String darkGreyBackground = EscapeSequences.SET_BG_COLOR_DARK_GREY;
-    public static final String greenBackground = EscapeSequences.SET_BG_COLOR_GREEN;
+    public static final String blueBackground = EscapeSequences.SET_BG_COLOR_BLUE;
     public static final String lightGreyBackground = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
     ArrayList<String> header = new ArrayList<>();
@@ -52,23 +57,10 @@ public class Printer {
         rows.add(row8);
     }
 
-    private void createHeader(){
-        header.add(darkGreyBackground + empty + empty + empty);
-        header.add(darkGreyBackground + blackText + empty + "a" + empty);
-        header.add(darkGreyBackground + blackText + empty + "b" + empty);
-        header.add(darkGreyBackground + blackText + empty + "c" + empty);
-        header.add(darkGreyBackground + blackText + empty + "d" + empty);
-        header.add(darkGreyBackground + blackText + empty + "e" + empty);
-        header.add(darkGreyBackground + blackText + empty + "f" + empty);
-        header.add(darkGreyBackground + blackText + empty + "g" + empty);
-        header.add(darkGreyBackground + blackText + empty + "h" + empty);
-    }
-
-
     private String getBackgroundColor(int row, int col){
         if (row % 2 == 0) {
             if (col % 2 == 1){
-                return greenBackground;
+                return blueBackground;
             }
             else {
                 return lightGreyBackground;
@@ -79,47 +71,7 @@ public class Printer {
                 return lightGreyBackground;
             }
             else{
-                return greenBackground;
-            }
-        }
-    }
-
-    private void printWhiteBoard(){
-        for (int i=0;i<header.size();i++){
-            System.out.print(header.get(i));
-        }
-        System.out.println();
-        for (ArrayList<String> item : rows){
-            for (String square : item){
-                System.out.print(square);
-            }
-            System.out.println();
-        }
-    }
-    
-    public void printBoard(ChessBoard board,ChessGame.TeamColor color){
-        createRows(board);
-        createHeader();
-        if (color == ChessGame.TeamColor.WHITE){
-            printWhiteBoard();
-        }
-//        else{
-//            printBlackBoard()
-//        }
-
-    }
-
-    private void createRows(ChessBoard board) {
-        for (int i = 1; i < 8; i++){
-            for (int j = 0; j <= 9; j++) {
-
-                if (j == 0 || j == 9){
-                    rows.get(i).add(darkGreyBackground + blackText+ empty + String.valueOf(i) + empty);
-                }
-                else{
-                    rows.get(i).add(getBackgroundColor(i,j) + empty + getChessPieceString(board,i,j) + empty);
-                }
-
+                return blueBackground;
             }
         }
     }
@@ -128,7 +80,10 @@ public class Printer {
         ChessPosition chessPosition = new ChessPosition(i, j);
         ChessPiece chessPiece = board.getPiece(chessPosition);
         if (chessPiece == null){
-            return empty;
+            if (Objects.equals(getBackgroundColor(i, j), lightGreyBackground)){
+                return lightGreyText + blackPawn;
+            }
+            return blueText + blackPawn;
         }
         if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             return getPieceStringWhite(chessPiece);
@@ -137,41 +92,101 @@ public class Printer {
     }
 
     private static String getPieceStringWhite(ChessPiece chessPiece) {
-        switch (chessPiece.getPieceType()){
-            case KING:
-                return whiteKing;
-            case QUEEN:
-                return whiteQueen;
-            case BISHOP:
-                return whiteBishop;
-            case KNIGHT:
-                return whiteKnight;
-            case ROOK:
-                return whiteRook;
-            case PAWN:
-                return whitePawn;
-            default:
-                return empty;
-        }
+        return switch (chessPiece.getPieceType()) {
+            case KING -> whiteKing;
+            case QUEEN -> whiteQueen;
+            case BISHOP -> whiteBishop;
+            case KNIGHT -> whiteKnight;
+            case ROOK -> whiteRook;
+            case PAWN -> whitePawn;
+            default -> empty;
+        };
     }
 
     private static String getPieceStringBlack(ChessPiece chessPiece) {
-        switch (chessPiece.getPieceType()){
-            case KING:
-                return blackKing;
-            case QUEEN:
-                return blackQueen;
-            case BISHOP:
-                return blackBishop;
-            case KNIGHT:
-                return blackKnight;
-            case ROOK:
-                return blackRook;
-            case PAWN:
-                return blackPawn;
-            default:
-                return empty;
+        return switch (chessPiece.getPieceType()) {
+            case KING -> blackKing;
+            case QUEEN -> blackQueen;
+            case BISHOP -> blackBishop;
+            case KNIGHT -> blackKnight;
+            case ROOK -> blackRook;
+            case PAWN -> blackPawn;
+            default -> empty;
+        };
+    }
+
+    private void createHeader(){
+        header.add(darkGreyBackground + empty);
+        header.add(darkGreyBackground + blackText + "   A ");
+        header.add(darkGreyBackground + blackText + " B");
+        header.add(darkGreyBackground + blackText + "  C ");
+        header.add(darkGreyBackground + blackText + "  D ");
+        header.add(darkGreyBackground + blackText + "  E ");
+        header.add(darkGreyBackground + blackText + " F ");
+        header.add(darkGreyBackground + blackText + "  G ");
+        header.add(darkGreyBackground + blackText + "  H ");
+        header.add(darkGreyBackground + empty);
+    }
+
+    private void createRows(ChessBoard board) {
+
+        for (int i = 1; i <= 8; i++){
+            for (int j = 0; j <= 9; j++) {
+
+                if (j == 0 || j == 9){
+                    rows.get(i-1).add(darkGreyBackground + blackText + "  " + String.valueOf(i) + "  ");
+                }
+                else{
+                    rows.get(i-1).add(getBackgroundColor(i,j) + getChessPieceString(board,i,j));
+                }
+
+            }
         }
     }
 
+    private void printWhiteBoard(){
+        for (String string : header) {
+            System.out.print(string);
+        }
+        System.out.println();
+        for (ArrayList<String> row : rows.reversed()){
+            for (String square : row){
+                System.out.print(square);
+            }
+            System.out.println();
+        }
+        for (String s : header) {
+            System.out.print(s);
+        }
+        System.out.println();
+    }
+
+    private void printBlackBoard(){
+        for (String string : header.reversed()) {
+            System.out.print(string);
+        }
+        System.out.println();
+        for (ArrayList<String> row : rows){
+            for (String square : row.reversed()){
+                System.out.print(square);
+            }
+            System.out.println();
+        }
+        for (String s : header.reversed()) {
+            System.out.print(s);
+        }
+        System.out.println();
+    }
+
+    public void printBoard(ChessBoard board,ChessGame.TeamColor color){
+        createRows(board);
+        createHeader();
+        if (color == ChessGame.TeamColor.WHITE){
+            printWhiteBoard();
+        }
+        else{
+            printBlackBoard();
+        }
+
+    }
 }
