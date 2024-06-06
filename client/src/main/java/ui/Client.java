@@ -2,8 +2,6 @@ package ui;
 
 import chess.ChessGame;
 import model.GameData;
-import server.ResponseException;
-import server.ServerFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,10 +127,10 @@ public class Client {
     private String observeGame(String[] tokens) throws ResponseException {
         try {
             if (tokens.length == 2) {
-                Printer Whiteprinter = new Printer();
-                Whiteprinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.WHITE);
-                Printer Blackprinter = new Printer();
-                Blackprinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.BLACK);
+                Printer whitePrinter = new Printer();
+                whitePrinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.WHITE);
+                Printer blackPrinter = new Printer();
+                blackPrinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.BLACK);
                 return "observing game:" + tokens[1];
             }
             throw new ResponseException(500,"wrong length\n");

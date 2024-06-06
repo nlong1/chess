@@ -1,4 +1,4 @@
-package server;
+package ui;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
@@ -7,7 +7,6 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import responses.*;
-import server.ResponseException;
 
 import java.io.IOException;
 import java.io.InputStream;

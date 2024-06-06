@@ -7,31 +7,29 @@ import chess.ChessPosition;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import ui.EscapeSequences;
-
 public class Printer {
 
-    public static final String whiteKing = EscapeSequences.WHITE_KING;
-    public static final String whiteQueen = EscapeSequences.WHITE_QUEEN;
-    public static final String whiteKnight = EscapeSequences.WHITE_KNIGHT;
-    public static final String whiteRook = EscapeSequences.WHITE_ROOK;
-    public static final String whitePawn = EscapeSequences.WHITE_PAWN;
-    public static final String whiteBishop = EscapeSequences.WHITE_BISHOP;
-    public static final String blackKing = EscapeSequences.BLACK_KING;
-    public static final String blackQueen = EscapeSequences.BLACK_QUEEN;
-    public static final String blackBishop = EscapeSequences.BLACK_BISHOP;
-    public static final String blackKnight = EscapeSequences.BLACK_KNIGHT;
-    public static final String blackRook = EscapeSequences.BLACK_ROOK;
-    public static final String blackPawn = EscapeSequences.BLACK_PAWN;
-    public static final String empty = EscapeSequences.EMPTY;
+    public static final String WHITE_KING = EscapeSequences.WHITE_KING;
+    public static final String WHITE_QUEEN = EscapeSequences.WHITE_QUEEN;
+    public static final String WHITE_KNIGHT = EscapeSequences.WHITE_KNIGHT;
+    public static final String WHITE_ROOK = EscapeSequences.WHITE_ROOK;
+    public static final String WHITE_PAWN = EscapeSequences.WHITE_PAWN;
+    public static final String WHITE_BISHOP = EscapeSequences.WHITE_BISHOP;
+    public static final String BLACK_KING = EscapeSequences.BLACK_KING;
+    public static final String BLACK_QUEEN = EscapeSequences.BLACK_QUEEN;
+    public static final String BLACK_BISHOP = EscapeSequences.BLACK_BISHOP;
+    public static final String BLACK_KNIGHT = EscapeSequences.BLACK_KNIGHT;
+    public static final String BLACK_ROOK = EscapeSequences.BLACK_ROOK;
+    public static final String BLACK_PAWN = EscapeSequences.BLACK_PAWN;
+    public static final String EMPTY = EscapeSequences.EMPTY;
 
-    public static final String blackText = EscapeSequences.SET_TEXT_COLOR_BLACK;
-    public static final String darkGreyText = EscapeSequences.SET_TEXT_COLOR_DARK_GREY;
-    public static final String lightGreyText = EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
-    public static final String blueText = EscapeSequences.SET_TEXT_COLOR_BLUE;
-    public static final String darkGreyBackground = EscapeSequences.SET_BG_COLOR_DARK_GREY;
-    public static final String blueBackground = EscapeSequences.SET_BG_COLOR_BLUE;
-    public static final String lightGreyBackground = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
+    public static final String BLACK_TEXT = EscapeSequences.SET_TEXT_COLOR_BLACK;
+    public static final String DARK_GREY_TEXT = EscapeSequences.SET_TEXT_COLOR_DARK_GREY;
+    public static final String LIGHT_GREY_TEXT = EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
+    public static final String BLUE_TEXT = EscapeSequences.SET_TEXT_COLOR_BLUE;
+    public static final String DARK_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_DARK_GREY;
+    public static final String BLUE_BACKGROUND = EscapeSequences.SET_BG_COLOR_BLUE;
+    public static final String LIGHT_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
     ArrayList<String> header = new ArrayList<>();
 
@@ -60,18 +58,18 @@ public class Printer {
     private String getBackgroundColor(int row, int col){
         if (row % 2 == 0) {
             if (col % 2 == 1){
-                return blueBackground;
+                return BLUE_BACKGROUND;
             }
             else {
-                return lightGreyBackground;
+                return LIGHT_GREY_BACKGROUND;
             }
         }
         else{
             if (col % 2 == 1){
-                return lightGreyBackground;
+                return LIGHT_GREY_BACKGROUND;
             }
             else{
-                return blueBackground;
+                return BLUE_BACKGROUND;
             }
         }
     }
@@ -80,10 +78,10 @@ public class Printer {
         ChessPosition chessPosition = new ChessPosition(i, j);
         ChessPiece chessPiece = board.getPiece(chessPosition);
         if (chessPiece == null){
-            if (Objects.equals(getBackgroundColor(i, j), lightGreyBackground)){
-                return lightGreyText + blackPawn;
+            if (Objects.equals(getBackgroundColor(i, j), LIGHT_GREY_BACKGROUND)){
+                return LIGHT_GREY_TEXT + BLACK_PAWN;
             }
-            return blueText + blackPawn;
+            return BLUE_TEXT + BLACK_PAWN;
         }
         if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             return getPieceStringWhite(chessPiece);
@@ -93,39 +91,39 @@ public class Printer {
 
     private static String getPieceStringWhite(ChessPiece chessPiece) {
         return switch (chessPiece.getPieceType()) {
-            case KING -> whiteKing;
-            case QUEEN -> whiteQueen;
-            case BISHOP -> whiteBishop;
-            case KNIGHT -> whiteKnight;
-            case ROOK -> whiteRook;
-            case PAWN -> whitePawn;
-            default -> empty;
+            case KING -> WHITE_KING;
+            case QUEEN -> WHITE_QUEEN;
+            case BISHOP -> WHITE_BISHOP;
+            case KNIGHT -> WHITE_KNIGHT;
+            case ROOK -> WHITE_ROOK;
+            case PAWN -> WHITE_PAWN;
+            default -> EMPTY;
         };
     }
 
     private static String getPieceStringBlack(ChessPiece chessPiece) {
         return switch (chessPiece.getPieceType()) {
-            case KING -> blackKing;
-            case QUEEN -> blackQueen;
-            case BISHOP -> blackBishop;
-            case KNIGHT -> blackKnight;
-            case ROOK -> blackRook;
-            case PAWN -> blackPawn;
-            default -> empty;
+            case KING -> BLACK_KING;
+            case QUEEN -> BLACK_QUEEN;
+            case BISHOP -> BLACK_BISHOP;
+            case KNIGHT -> BLACK_KNIGHT;
+            case ROOK -> BLACK_ROOK;
+            case PAWN -> BLACK_PAWN;
+            default -> EMPTY;
         };
     }
 
     private void createHeader(){
-        header.add(darkGreyBackground + empty);
-        header.add(darkGreyBackground + blackText + "   A ");
-        header.add(darkGreyBackground + blackText + " B");
-        header.add(darkGreyBackground + blackText + "  C ");
-        header.add(darkGreyBackground + blackText + "  D ");
-        header.add(darkGreyBackground + blackText + "  E ");
-        header.add(darkGreyBackground + blackText + " F ");
-        header.add(darkGreyBackground + blackText + "  G ");
-        header.add(darkGreyBackground + blackText + "  H ");
-        header.add(darkGreyBackground + empty);
+        header.add(DARK_GREY_BACKGROUND + EMPTY);
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "   A ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + " B");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  C ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  D ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  E ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + " F ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  G ");
+        header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  H ");
+        header.add(DARK_GREY_BACKGROUND + EMPTY);
     }
 
     private void createRows(ChessBoard board) {
@@ -134,7 +132,7 @@ public class Printer {
             for (int j = 0; j <= 9; j++) {
 
                 if (j == 0 || j == 9){
-                    rows.get(i-1).add(darkGreyBackground + blackText + "  " + String.valueOf(i) + "  ");
+                    rows.get(i-1).add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  " + String.valueOf(i) + "  ");
                 }
                 else{
                     rows.get(i-1).add(getBackgroundColor(i,j) + getChessPieceString(board,i,j));
