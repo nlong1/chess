@@ -1,13 +1,20 @@
 package ui;
 
+import chess.ChessGame;
+import model.GameData;
 import server.ResponseException;
 import server.ServerFacade;
+
+import java.util.Collection;
+import java.util.HashMap;
 
 
 public class Client {
     private final ServerFacade server;
     private final String serverUrl;
     private String authToken;
+    private HashMap<Integer,Integer> gamesIdMap = new HashMap();
+    private HashMap<Integer, ChessGame> gamesMap = new HashMap();
 
     public Client(String serverUrl){
         server = new ServerFacade(serverUrl);
@@ -19,7 +26,7 @@ public class Client {
                 register <USERNAME> <PASSWORD> <EMAIL> - to create an account
                 login <USERNAME> <PASSWORD>
                 quit - playing chess
-                help - list possible commands\n
+                help - list possible commands \n
         """;
     }
 
@@ -47,7 +54,7 @@ public class Client {
         }
         catch (Exception e) {
             throw new ResponseException(500, """
-                            Invalid Registration.\n        Register with register <USERNAME> <PASSWORD> <EMAIL>\n
+                            Invalid Registration \n        Register with register <USERNAME> <PASSWORD> <EMAIL>\n
                     """);
         }
     }
@@ -63,29 +70,87 @@ public class Client {
         }
     }
 
-    private String createGame(String[] tokens){
-        return "";
+    private String createGame(String[] tokens) throws ResponseException {
+        try {
+            if (tokens.length == 2) {
+                return server.createGame(tokens,authToken);
+            }
+            throw new ResponseException(500,"wrong length\n");
+        }
+        catch (Exception e) {
+            throw new ResponseException(500, """
+                            Invalid Game Creation \n        Create game with: create <GAME NAME>\n
+                    """);
+        }
     }
 
-    private String listGames(){
-        return "";
+    private String listGames() throws ResponseException {
+        try{
+            Collection<GameData> games = server.listGames(authToken);
+            gamesIdMap = new HashMap<>();
+            int number = 0;
+            for (GameData game:games){
+                number++;
+                gamesIdMap.put(number,game.gameID());
+                gamesMap.put(number,game.game());
+                System.out.print("        Game ");
+                System.out.print(number);
+                System.out.println(": " + game.gameName() + "\n" + "        white player: " + game.whiteUsername() + ", black player: " + game.blackUsername() + "\n");
+            }
+            return "\n";
+
+        }
+        catch (Exception e) {
+            throw new ResponseException(500,"""
+                            List Games Error \n
+                    """);
+        }
     }
 
-    private String playGame(String[] tokens){
-        return "";
+    private String playGame(String[] tokens) throws ResponseException {
+        try {
+            if (tokens.length == 3) {
+                String response = server.joinGame(tokens[1], gamesIdMap.get(Integer.valueOf(tokens[2])),authToken);
+                Printer printerWhite = new Printer();
+                printerWhite.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.WHITE);
+                Printer printerBlack = new Printer();
+                printerBlack.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.BLACK);
+                return response;
+            }
+            throw new ResponseException(500,"wrong length\n");
+        }
+        catch (Exception e) {
+            throw new ResponseException(500, """
+                            Invalid Request to Play \n        Play game with: play <"WHITE/BLACK"> <GAME NUMBER> \n
+                    """);
+        }
     }
 
-    private String observeGame(String[] tokens){
-        return "";
+    private String observeGame(String[] tokens) throws ResponseException {
+        try {
+            if (tokens.length == 2) {
+                Printer Whiteprinter = new Printer();
+                Whiteprinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.WHITE);
+                Printer Blackprinter = new Printer();
+                Blackprinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.BLACK);
+                return "observing game:" + tokens[1];
+            }
+            throw new ResponseException(500,"wrong length\n");
+        }
+        catch (Exception e) {
+            throw new ResponseException(500, """
+                            Invalid Observer \n        Observe game with: observe <GAME NUMBER>\n
+                    """);
+        }
     }
 
     private String loggedInHelp(){
         return """
                 logout
-                create game <GAME NAME>
+                create <GAME NAME>
                 list - lists all available games
-                play <"WHITE/BLACK"> <"gameID">
-                observe <"gameID>
+                play <"WHITE/BLACK"> <GAME NUMBER>
+                observe <GAME NUMBER> \n
         """;
     }
 
@@ -109,13 +174,13 @@ public class Client {
                 switch (tokens[0]) {
                     case "logout":
                         return logout();
-                    case "create game":
+                    case "create":
                         return createGame(tokens);
-                    case "list games":
+                    case "list":
                         return listGames();
-                    case "play game":
+                    case "play":
                         return playGame(tokens);
-                    case "observe game":
+                    case "observe":
                         return observeGame(tokens);
                     default:
                         return loggedInHelp();

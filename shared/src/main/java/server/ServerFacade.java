@@ -1,10 +1,12 @@
 package server;
+import chess.ChessGame;
 import com.google.gson.Gson;
+import model.GameData;
+import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
-import responses.LoginResponse;
-import responses.LogoutResponse;
-import responses.RegisterResponse;
+import responses.*;
 import server.ResponseException;
 
 import java.io.IOException;
@@ -14,12 +16,40 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Objects;
 
 public class ServerFacade {
     private final String serverUrl;
 
     public ServerFacade(String url){
         serverUrl = url;
+    }
+
+    public String joinGame(String player, Integer gameId, String authToken) throws Exception{
+        ChessGame.TeamColor color;
+        if (Objects.equals(player, "white")){
+            color = ChessGame.TeamColor.WHITE;
+        }
+        else if (Objects.equals(player, "black")){
+            color = ChessGame.TeamColor.BLACK;
+        }
+        else{
+            throw new Exception("not black or white");
+        }
+        JoinGameResponse joinGameResponse = makeRequest("PUT","/game",new JoinGameRequest(color,gameId),JoinGameResponse.class,authToken);
+        return "joined game successfully \n";
+    }
+
+    public Collection<GameData> listGames(String authToken) throws ResponseException {
+        ListGamesResponse listGamesResponse = makeRequest("GET","/game",null,ListGamesResponse.class,authToken);
+        return listGamesResponse.games();
+    }
+
+    public String createGame(String[] request, String authToken) throws Exception{
+        CreateGameResponse createGameResponse = makeRequest("POST","/game",new CreateGameRequest(request[1]),CreateGameResponse.class,authToken);
+        System.out.println("Successful creation of: " + request[1]);
+        return "";
     }
 
     public String logout(String authToken) throws Exception{
