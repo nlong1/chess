@@ -160,6 +160,7 @@ public class ServerFacadeTests {
     void joinGame2() throws Exception {
         try{
             facade.joinGame("w",45,"auth");
+            fail();
         }
         catch (Exception e){
             assertEquals("not black or white",e.getMessage());
