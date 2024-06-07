@@ -30,6 +30,8 @@ public class Printer {
     public static final String DARK_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_DARK_GREY;
     public static final String BLUE_BACKGROUND = EscapeSequences.SET_BG_COLOR_BLUE;
     public static final String LIGHT_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
+    public static final String RESET_BACKGROUND_COLOR = EscapeSequences.RESET_BG_COLOR;
+    public static final String WHITE_TEXT = EscapeSequences.SET_TEXT_COLOR_WHITE;
 
     ArrayList<String> header = new ArrayList<>();
 
@@ -185,6 +187,7 @@ public class Printer {
         else{
             printBlackBoard();
         }
+        System.out.println(RESET_BACKGROUND_COLOR+WHITE_TEXT);
 
     }
 }

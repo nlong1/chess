@@ -64,7 +64,8 @@ public class ServerFacade {
 
     public String register(String[] request) throws Exception {
         RegisterResponse registerResponse = makeRequest("POST","/user",new RegisterRequest(request[1],request[2],request[3]), RegisterResponse.class,null);
-        return "        successful register with user: " + registerResponse.username();
+        System.out.println("        successful register with user: " + registerResponse.username());
+        return registerResponse.authToken();
     }
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {

@@ -46,7 +46,8 @@ public class Client {
     private String register(String[] tokens) throws ResponseException{
         try {
             if (tokens.length == 4) {
-                return server.register(tokens);
+                authToken = server.register(tokens);
+                return "        logged in";
             }
             throw new ResponseException(500,"wrong length\n");
         }
