@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.dao.sqldao.DataBaseAuthDataAccessObject;
@@ -8,7 +9,9 @@ import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import server.Server;
 import websocket.commands.*;
+import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerNotification;
 
 import java.io.IOException;
@@ -52,9 +55,20 @@ public class WebSocketHandler {
 
     private void connect(String username, Session session,ConnectCommand connectCommand) throws IOException {
         connections.add(username, session, connectCommand.getGameID());
-        var message = String.format("%s has joined the game", username);
+        String color;
+        if (connectCommand.getColor() == ChessGame.TeamColor.WHITE){
+            color = "white";
+        }
+        else if (connectCommand.getColor() == ChessGame.TeamColor.BLACK){
+            color = "black";
+        }
+        else{
+            color = "observer";
+        }
+        var message = String.format("%s has joined the game as %s", username,color);
         ServerNotification notification = new ServerNotification(message);
-        System.out.println("attempt to broadcast message");
+        ServerLoadGame serverLoadGame = new ServerLoadGame(true,connectCommand.getGameID(),connectCommand.getColor());
+        connections.send(username,serverLoadGame, connectCommand.getGameID());
         connections.broadcast(username, notification, connectCommand.getGameID());
     }
 

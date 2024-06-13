@@ -41,7 +41,6 @@ public class ConnectionManager {
         for (var c : gameConnections.values()) {
             if (c.session.isOpen()) {
                 if (!c.username.equals(excludeVisitorName)) {
-                    System.out.println("should've sent a message");
                     c.send(serverMessage.toString());
                 }
             } else {
@@ -53,4 +52,10 @@ public class ConnectionManager {
             gameConnections.remove(c.username);
         }
     }
+
+    public void send(String username, ServerMessage serverMessage,Integer gameID) throws IOException{
+        HashMap<String,Connection> gameConnections = connections.get(gameID);
+        gameConnections.get(username).send(serverMessage.toString());
+    }
+
 }

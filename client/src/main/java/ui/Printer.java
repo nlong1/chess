@@ -181,11 +181,11 @@ public class Printer {
     public void printBoard(ChessBoard board,ChessGame.TeamColor color){
         createRows(board);
         createHeader();
-        if (color == ChessGame.TeamColor.WHITE){
-            printWhiteBoard();
+        if (color == ChessGame.TeamColor.BLACK){
+            printBlackBoard();
         }
         else{
-            printBlackBoard();
+            printWhiteBoard();
         }
         System.out.println(RESET_BACKGROUND_COLOR+WHITE_TEXT);
 

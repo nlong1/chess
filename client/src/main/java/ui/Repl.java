@@ -1,8 +1,10 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import org.eclipse.jetty.server.Server;
 import ui.EscapeSequences;
+import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
 
@@ -46,6 +48,19 @@ public class Repl implements NotificationHandler{
         if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION){
             ServerNotification serverNotification = new Gson().fromJson(message,ServerNotification.class);
             System.out.println(serverNotification.getMessage());
+        }
+        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+            ServerLoadGame serverLoadGame = new Gson().fromJson(message, ServerLoadGame.class);
+            if (serverLoadGame.hasGame()){
+                Integer gameID = serverLoadGame.getGameID();
+                ChessGame chessGame = client.getGame(gameID);
+                System.out.println("Printing Board...");;
+                if (chessGame == null){
+                    System.out.println("bad");
+                }
+                System.out.println(chessGame);
+                new Printer().printBoard(chessGame.getBoard(), serverLoadGame.getColor());
+            }
         }
         else{
             System.out.println("this isn't a notification??");

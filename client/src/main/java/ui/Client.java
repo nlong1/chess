@@ -5,6 +5,7 @@ import model.GameData;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Client {
     private final ServerFacade server;
@@ -12,6 +13,7 @@ public class Client {
     private String authToken;
     private HashMap<Integer,Integer> gamesIdMap = new HashMap();
     private HashMap<Integer, ChessGame> gamesMap = new HashMap();
+    private HashMap<Integer,Integer> reverseGamesIdMap = new HashMap();
     private ui.WebSocketFacade ws;
     private final NotificationHandler notificationHandler;
 
@@ -19,6 +21,10 @@ public class Client {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.notificationHandler = notificationHandler;
+    }
+
+    public ChessGame getGame(Integer gameID){
+        return gamesMap.get(reverseGamesIdMap.get(gameID));
     }
 
     private String help(){
@@ -89,10 +95,12 @@ public class Client {
         try{
             Collection<GameData> games = server.listGames(authToken);
             gamesIdMap = new HashMap<>();
+            reverseGamesIdMap = new HashMap<>();
             int number = 0;
             for (GameData game:games){
                 number++;
                 gamesIdMap.put(number,game.gameID());
+                reverseGamesIdMap.put(game.gameID(),number);
                 gamesMap.put(number,game.game());
                 System.out.print("        Game ");
                 System.out.print(number);
@@ -109,15 +117,18 @@ public class Client {
     }
 
     private String playGame(String[] tokens) throws ResponseException {
+        ChessGame.TeamColor color;
         try {
             if (tokens.length == 3) {
                 String response = server.joinGame(tokens[1], gamesIdMap.get(Integer.valueOf(tokens[2])),authToken);
-                Printer printerWhite = new Printer();
-                printerWhite.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.WHITE);
-                Printer printerBlack = new Printer();
-                printerBlack.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.BLACK);
+                if (Objects.equals(tokens[1], "white")){
+                    color = ChessGame.TeamColor.WHITE;
+                }
+                else{
+                    color = ChessGame.TeamColor.BLACK;
+                }
                 ws = new WebSocketFacade(serverUrl,notificationHandler);
-                ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[2])));
+                ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[2])),color);
                 return response;
             }
             throw new ResponseException(500,"wrong length\n");
@@ -132,10 +143,8 @@ public class Client {
     private String observeGame(String[] tokens) throws ResponseException {
         try {
             if (tokens.length == 2) {
-                Printer whitePrinter = new Printer();
-                whitePrinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.WHITE);
-                Printer blackPrinter = new Printer();
-                blackPrinter.printBoard(gamesMap.get(Integer.valueOf(tokens[1])).getBoard(), ChessGame.TeamColor.BLACK);
+                ws = new WebSocketFacade(serverUrl,notificationHandler);
+                ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[1])),null);
                 return "observing game:" + tokens[1];
             }
             throw new ResponseException(500,"wrong length\n");
