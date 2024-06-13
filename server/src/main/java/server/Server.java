@@ -9,10 +9,13 @@ import handler.CreateGameHandler;
 import handler.ClearApplicationHandler;
 import handler.LoginHandler;
 import handler.LogoutHandler;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 
 public class Server {
+    private static final WebSocketHandler webSocketHandler = new WebSocketHandler();
+
     public static void main(String[] args){
         int port = 8080;
         if (args.length == 1) {
@@ -27,6 +30,8 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> RegisterHandler.getInstance().handleRequest(req, res));

@@ -6,17 +6,19 @@ import model.GameData;
 import java.util.Collection;
 import java.util.HashMap;
 
-
 public class Client {
     private final ServerFacade server;
     private final String serverUrl;
     private String authToken;
     private HashMap<Integer,Integer> gamesIdMap = new HashMap();
     private HashMap<Integer, ChessGame> gamesMap = new HashMap();
+    private ui.WebSocketFacade ws;
+    private final NotificationHandler notificationHandler;
 
-    public Client(String serverUrl){
+    public Client(String serverUrl,NotificationHandler notificationHandler){
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
+        this.notificationHandler = notificationHandler;
     }
 
     private String help(){
@@ -114,6 +116,8 @@ public class Client {
                 printerWhite.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.WHITE);
                 Printer printerBlack = new Printer();
                 printerBlack.printBoard(gamesMap.get(Integer.valueOf(tokens[2])).getBoard(), ChessGame.TeamColor.BLACK);
+                ws = new WebSocketFacade(serverUrl,notificationHandler);
+                ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[2])));
                 return response;
             }
             throw new ResponseException(500,"wrong length\n");
