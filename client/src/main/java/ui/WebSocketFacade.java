@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import ui.NotificationHandler;
 import ui.ResponseException;
 import websocket.commands.ConnectCommand;
+import websocket.commands.LeaveGameCommand;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
 
@@ -33,7 +34,7 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    System.out.println("received a message from Server");
+//                    System.out.println("received a message from Server");
                     notificationHandler.notify(message);
                 }
             });
@@ -54,6 +55,16 @@ public class WebSocketFacade extends Endpoint {
         } catch (IOException ex) {
             System.out.println("couldn't send connect command");
             throw new ResponseException(500, ex.getMessage());
+        }
+    }
+
+    public void leave(String authToken,Integer gameID) throws ResponseException {
+        try {
+            var command = new LeaveGameCommand(authToken,gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException e) {
+            System.out.println("couldn't leave game");
+            throw new ResponseException(500,e.getMessage());
         }
     }
 

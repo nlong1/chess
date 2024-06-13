@@ -5,7 +5,7 @@ public class LeaveGameCommand extends UserGameCommand{
 
     public LeaveGameCommand(String authToken,Integer gameID) {
         super(authToken);
-        commandType = CommandType.CONNECT;
+        commandType = CommandType.LEAVE;
         this.gameID = gameID;
     }
 

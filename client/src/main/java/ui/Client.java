@@ -16,6 +16,8 @@ public class Client {
     private HashMap<Integer,Integer> reverseGamesIdMap = new HashMap();
     private ui.WebSocketFacade ws;
     private final NotificationHandler notificationHandler;
+    private Integer gameNumber;
+    private ChessGame.TeamColor color;
 
     public Client(String serverUrl,NotificationHandler notificationHandler){
         server = new ServerFacade(serverUrl);
@@ -117,10 +119,10 @@ public class Client {
     }
 
     private String playGame(String[] tokens) throws ResponseException {
-        ChessGame.TeamColor color;
         try {
             if (tokens.length == 3) {
                 String response = server.joinGame(tokens[1], gamesIdMap.get(Integer.valueOf(tokens[2])),authToken);
+                gameNumber = Integer.valueOf(tokens[2]);
                 if (Objects.equals(tokens[1], "white")){
                     color = ChessGame.TeamColor.WHITE;
                 }
@@ -129,7 +131,8 @@ public class Client {
                 }
                 ws = new WebSocketFacade(serverUrl,notificationHandler);
                 ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[2])),color);
-                return response;
+                System.out.println(response);
+                return "...";
             }
             throw new ResponseException(500,"wrong length\n");
         }
@@ -145,7 +148,9 @@ public class Client {
             if (tokens.length == 2) {
                 ws = new WebSocketFacade(serverUrl,notificationHandler);
                 ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[1])),null);
-                return "observing game:" + tokens[1];
+                gameNumber = Integer.valueOf(tokens[1]);
+                System.out.println("observing game:" + tokens[1]);
+                return "...";
             }
             throw new ResponseException(500,"wrong length\n");
         }
@@ -166,7 +171,17 @@ public class Client {
         """;
     }
 
-    public String eval(String input,boolean loggedIn){
+    private String gameHelp(){
+        return """
+                redraw - redraws chess board
+                leave - exits game
+                move <the> <move> - makes a move on the board
+                resign - the game ends
+                highlight - highlights legal moves \n
+        """;
+    }
+
+    public String eval(String input,boolean loggedIn,boolean inGame){
         var tokens = input.toLowerCase().split(" ");
         try{
             if (!loggedIn) {
@@ -182,7 +197,7 @@ public class Client {
 
                 }
             }
-            else{
+            else if (!inGame){
                 switch (tokens[0]) {
                     case "logout":
                         return logout();
@@ -199,10 +214,49 @@ public class Client {
 
                 }
             }
+            else{
+                switch (tokens[0]) {
+                    case "redraw":
+                        return redraw();
+                    case "leave":
+                        return leave();
+                    case "move":
+                        return move(tokens);
+                    case "resign":
+                        return resign();
+                    case "highlight":
+                        return highlight();
+                    default:
+                        return gameHelp();
+
+                }
+            }
         }
         catch (Exception e){
             return e.getMessage();
         }
+    }
+
+    private String highlight() {
+        return "";
+    }
+
+    private String resign() {
+        return "";
+    }
+
+    private String move(String[] tokens) {
+        return "";
+    }
+
+    private String leave() throws ResponseException {
+        ws.leave(authToken,gamesIdMap.get(gameNumber));
+        return "        left game";
+    }
+
+    private String redraw() throws ResponseException {
+        new Printer().printBoard(gamesMap.get(gameNumber).getBoard(),color);
+        return "";
     }
 
 }

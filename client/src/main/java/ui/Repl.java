@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class Repl implements NotificationHandler{
     private final Client client;
     private boolean loggedIn = false;
+    private boolean inGame = false;
 
     public Repl(String serverUrl) {
         client = new Client(serverUrl,this);
@@ -26,12 +27,18 @@ public class Repl implements NotificationHandler{
         while (!result.equals("quit")){
             String line = scanner.nextLine();
             try{
-                result = client.eval(line,loggedIn);
+                result = client.eval(line,loggedIn,inGame);
                 if (result == "        logged in"){
                     loggedIn = true;
                 }
                 else if (result == "        logged out"){
                     loggedIn = false;
+                }
+                else if (result == "..."){
+                    inGame = true;
+                }
+                else if (result == "        left game"){
+                    inGame = false;
                 }
                 System.out.print(result);
             }
@@ -43,7 +50,7 @@ public class Repl implements NotificationHandler{
     }
 
     public void notify(String message) {
-        System.out.println("should've put a message to client");
+//        System.out.println("should've put a message to client");
         ServerMessage serverMessage = new Gson().fromJson(message,ServerMessage.class);
         if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION){
             ServerNotification serverNotification = new Gson().fromJson(message,ServerNotification.class);
@@ -63,7 +70,7 @@ public class Repl implements NotificationHandler{
             }
         }
         else{
-            System.out.println("this isn't a notification??");
+//            System.out.println("this isn't a notification??");
         }
     }
 }
