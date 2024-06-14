@@ -1,6 +1,10 @@
 package server.websocket;
 
+import chess.ChessGame;
+import dataaccess.DataAccessException;
+import dataaccess.dao.GameDataAccessObject;
 import dataaccess.dao.sqldao.DataBaseGameDataAccessObject;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
@@ -25,8 +29,19 @@ public class ConnectionManager {
         }
     }
 
-    public void remove(Integer gameID,String username) {
+    public void remove(Integer gameID,String username,ChessGame.TeamColor color) throws DataAccessException {
         connections.get(gameID).remove(username);
+        GameData updatedGame;
+        DataBaseGameDataAccessObject dataBaseGameDataAccessObject = new DataBaseGameDataAccessObject();
+        GameData gameData = dataBaseGameDataAccessObject.getGame(gameID);
+        if (color == ChessGame.TeamColor.BLACK){
+            updatedGame = new GameData(gameID,gameData.whiteUsername(),null,gameData.gameName(),gameData.game());
+            dataBaseGameDataAccessObject.updateGame(gameID,updatedGame);
+        }
+        else if (color == ChessGame.TeamColor.WHITE){
+            updatedGame = new GameData(gameID,null, gameData.blackUsername(), gameData.gameName(),gameData.game());
+            dataBaseGameDataAccessObject.updateGame(gameID,updatedGame);
+        }
     }
 
     public void deleteGame(Integer gameID){

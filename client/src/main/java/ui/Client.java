@@ -149,7 +149,7 @@ public class Client {
                 ws = new WebSocketFacade(serverUrl,notificationHandler);
                 ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[1])),null);
                 gameNumber = Integer.valueOf(tokens[1]);
-                System.out.println("observing game:" + tokens[1]);
+                System.out.println("        observing game:" + tokens[1]);
                 return "...";
             }
             throw new ResponseException(500,"wrong length\n");
@@ -250,11 +250,11 @@ public class Client {
     }
 
     private String leave() throws ResponseException {
-        ws.leave(authToken,gamesIdMap.get(gameNumber));
+        ws.leave(authToken,gamesIdMap.get(gameNumber),color);
         return "        left game";
     }
 
-    private String redraw() throws ResponseException {
+    private String redraw() {
         new Printer().printBoard(gamesMap.get(gameNumber).getBoard(),color);
         return "";
     }

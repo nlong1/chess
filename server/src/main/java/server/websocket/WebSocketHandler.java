@@ -3,6 +3,7 @@ package server.websocket;
 import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.dao.sqldao.DataBaseAuthDataAccessObject;
 import dataaccess.dao.sqldao.DataBaseGameDataAccessObject;
 import model.GameData;
@@ -65,7 +66,7 @@ public class WebSocketHandler {
         else{
             color = "observer";
         }
-        var message = String.format("%s has joined the game as %s", username,color);
+        var message = String.format("        %s has joined the game as %s", username,color);
         ServerNotification notification = new ServerNotification(message);
         ServerLoadGame serverLoadGame = new ServerLoadGame(true,connectCommand.getGameID(),connectCommand.getColor());
         connections.send(username,serverLoadGame, connectCommand.getGameID());
@@ -89,14 +90,19 @@ public class WebSocketHandler {
     }
 
     private void leaveGame(Session session, String username, LeaveGameCommand leaveGameCommand) throws IOException {
-        connections.remove(leaveGameCommand.getGameID(), username);
-        var message = String.format("%s has left the game", username);
-        var notification = new ServerNotification(message);
-        connections.broadcast(username, notification, leaveGameCommand.getGameID());
+        try {
+            connections.remove(leaveGameCommand.getGameID(), username, leaveGameCommand.getColor());
+            var message = String.format("        %s has left the game", username);
+            var notification = new ServerNotification(message);
+            connections.broadcast(username, notification, leaveGameCommand.getGameID());
+        }
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void resign(Session session, String username, ResignCommand resignCommand) throws IOException {
-        var message = String.format("%s has forfeit", username);
+        var message = String.format("        %s has forfeit", username);
         var notification = new ServerNotification(message);
         connections.broadcast(username,notification, resignCommand.getGameID());
         connections.deleteGame(resignCommand.getGameID());

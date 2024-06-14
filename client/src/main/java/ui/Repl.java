@@ -61,7 +61,7 @@ public class Repl implements NotificationHandler{
             if (serverLoadGame.hasGame()){
                 Integer gameID = serverLoadGame.getGameID();
                 ChessGame chessGame = client.getGame(gameID);
-                System.out.println("Printing Board...");;
+                System.out.println("        Printing Board...");;
                 if (chessGame == null){
                     System.out.println("bad");
                 }
