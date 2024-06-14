@@ -79,7 +79,7 @@ public class Repl implements NotificationHandler{
             System.out.println(serverError.getMessage());
         }
         else{
-//            System.out.println("this isn't a notification??");
+            System.out.println("this isn't a notification??");
         }
     }
 }
