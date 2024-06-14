@@ -1,11 +1,13 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import ui.NotificationHandler;
 import ui.ResponseException;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveGameCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
 
@@ -53,7 +55,7 @@ public class WebSocketFacade extends Endpoint {
             var command = new ConnectCommand(authToken,gameID,color);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
-            System.out.println("couldn't send connect command");
+            System.out.println("        couldn't send connect command");
             throw new ResponseException(500, ex.getMessage());
         }
     }
@@ -63,19 +65,19 @@ public class WebSocketFacade extends Endpoint {
             var command = new LeaveGameCommand(authToken,gameID,color);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException e) {
-            System.out.println("couldn't leave game");
+            System.out.println("        couldn't leave game");
             throw new ResponseException(500,e.getMessage());
         }
     }
 
-//    public void leavePetShop(String visitorName) throws ResponseException {
-//        try {
-//            var action = new Action(Action.Type.EXIT, visitorName);
-//            this.session.getBasicRemote().sendText(new Gson().toJson(action));
-//            this.session.close();
-//        } catch (IOException ex) {
-//            throw new ResponseException(500, ex.getMessage());
-//        }
-//    }
+    public void makeMove(String authToken, Integer gameID , ChessGame.TeamColor color, ChessMove chessMove) throws ResponseException {
+        try {
+            var command = new MakeMoveCommand(authToken,gameID,color,chessMove);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException e) {
+            System.out.println("        invalid move");
+            throw new ResponseException(500,e.getMessage());
+        }
+    }
 
 }

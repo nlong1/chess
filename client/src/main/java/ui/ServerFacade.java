@@ -37,7 +37,7 @@ public class ServerFacade {
             throw new Exception("not black or white");
         }
         JoinGameResponse joinGameResponse = makeRequest("PUT","/game",new JoinGameRequest(color,gameId),JoinGameResponse.class,authToken);
-        return "joined game successfully \n";
+        return "        joined game successfully \n";
     }
 
     public Collection<GameData> listGames(String authToken) throws ResponseException {
@@ -47,7 +47,7 @@ public class ServerFacade {
 
     public String createGame(String[] request, String authToken) throws Exception{
         CreateGameResponse createGameResponse = makeRequest("POST","/game",new CreateGameRequest(request[1]),CreateGameResponse.class,authToken);
-        System.out.println("Successful creation of: " + request[1]);
+        System.out.println("        Successful creation of: " + request[1]);
         return "";
     }
 

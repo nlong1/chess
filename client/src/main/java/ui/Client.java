@@ -1,6 +1,6 @@
 package ui;
 
-import chess.ChessGame;
+import chess.*;
 import model.GameData;
 
 import java.util.Collection;
@@ -25,7 +25,25 @@ public class Client {
         this.notificationHandler = notificationHandler;
     }
 
-    public ChessGame getGame(Integer gameID){
+    public ChessGame.TeamColor getColor(){
+        return color;
+    }
+
+    private void updateGames() throws ResponseException {
+        Collection<GameData> games = server.listGames(authToken);
+        gamesIdMap = new HashMap<>();
+        reverseGamesIdMap = new HashMap<>();
+        int number = 0;
+        for (GameData game:games){
+            number++;
+            gamesIdMap.put(number,game.gameID());
+            reverseGamesIdMap.put(game.gameID(),number);
+            gamesMap.put(number, game.game());
+        }
+    }
+
+    public ChessGame getGame(Integer gameID) throws ResponseException {
+        updateGames();
         return gamesMap.get(reverseGamesIdMap.get(gameID));
     }
 
@@ -175,7 +193,8 @@ public class Client {
         return """
                 redraw - redraws chess board
                 leave - exits game
-                move <the> <move> - makes a move on the board
+                move <start position> <end position> <promotion piece> - makes a move on the board
+                    eg: move <A7> <A6> <none>
                 resign - the game ends
                 highlight - highlights legal moves \n
         """;
@@ -246,7 +265,30 @@ public class Client {
     }
 
     private String move(String[] tokens) {
+        try {
+            if (tokens.length != 4){
+                throw new ResponseException(500,"        Invalid Move Format: move <start> <end> <piece>");
+            }
+            ChessMove chessMove = getChessMove(tokens);
+            ws.makeMove(authToken,gamesIdMap.get(gameNumber),color,chessMove);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return "";
+    }
+
+    private static ChessMove getChessMove(String[] tokens) throws InvalidMoveException {
+        try {
+            ChessLetterConverter chessLetterConverter = new ChessLetterConverter();
+            ChessPosition startPosition = new ChessPosition(Integer.parseInt(String.valueOf(tokens[1].charAt(1))),chessLetterConverter.getNumber(tokens[1].charAt(0)));
+            ChessPosition endPosition = new ChessPosition(Integer.parseInt(String.valueOf(tokens[2].charAt(1))),chessLetterConverter.getNumber(tokens[2].charAt(0)));
+            ChessPiece.PieceType pieceType = chessLetterConverter.getPieceType(tokens[3]);
+            return new ChessMove(startPosition, endPosition, pieceType);
+        }
+        catch (Exception e){
+            throw new InvalidMoveException("        Invalid Move Creation");
+        }
     }
 
     private String leave() throws ResponseException {
@@ -254,7 +296,8 @@ public class Client {
         return "        left game";
     }
 
-    private String redraw() {
+    private String redraw() throws ResponseException {
+        updateGames();
         new Printer().printBoard(gamesMap.get(gameNumber).getBoard(),color);
         return "";
     }

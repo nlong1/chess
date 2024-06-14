@@ -12,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.Server;
 import websocket.commands.*;
+import websocket.messages.ServerError;
 import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerNotification;
 
@@ -76,17 +77,26 @@ public class WebSocketHandler {
     private void makeMove(String username,Session session, MakeMoveCommand makeMoveCommand) throws IOException {
         try {
             GameData gameData = new DataBaseGameDataAccessObject().getGame(makeMoveCommand.getGameID());
-            gameData.game().makeMove(makeMoveCommand.getChessMove());
+            ChessGame updatedGame = gameData.game();
+            updatedGame.makeMove(makeMoveCommand.getChessMove());
+            GameData updatedGameData = new GameData(gameData.gameID(),gameData.whiteUsername(),gameData.blackUsername(),gameData.gameName(),updatedGame);
+            new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
         }
         catch (InvalidMoveException e){
-            session.getRemote().sendString(e.getMessage());
+            ServerError serverError = new ServerError(e.getMessage());
+            session.getRemote().sendString(new Gson().toJson(serverError));
         }
         catch (Exception _){
+            System.out.println("Exception caught");
             return;
         }
-        var message = String.format("%s made a move",username);
+        var message = String.format("        %s made a move",username);
         var notification = new ServerNotification(message);
         connections.broadcast(username, notification, makeMoveCommand.getGameID());
+        var loadGame = new ServerLoadGame(true,makeMoveCommand.getGameID(),makeMoveCommand.getColor());
+        ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), makeMoveCommand.getColor());
+        session.getRemote().sendString(new Gson().toJson(serverLoadGame));
+        connections.broadcast(username,serverLoadGame, makeMoveCommand.getGameID());
     }
 
     private void leaveGame(Session session, String username, LeaveGameCommand leaveGameCommand) throws IOException {

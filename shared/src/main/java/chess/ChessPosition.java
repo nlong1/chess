@@ -29,6 +29,11 @@ public class ChessPosition {
         return Objects.hash(row, col);
     }
 
+    @Override
+    public String toString(){
+        return String.valueOf(row) + " " + String.valueOf(col);
+    }
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row

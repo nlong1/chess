@@ -101,7 +101,7 @@ public class ChessGame {
 
         Collection<ChessMove> moves = this.validMoves(startPosition);
         if (!moves.contains(move)){
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("invalid move");
         }
 
         board.applyMove(move);

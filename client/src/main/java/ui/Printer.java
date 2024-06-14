@@ -32,6 +32,7 @@ public class Printer {
     public static final String LIGHT_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
     public static final String RESET_BACKGROUND_COLOR = EscapeSequences.RESET_BG_COLOR;
     public static final String WHITE_TEXT = EscapeSequences.SET_TEXT_COLOR_WHITE;
+    public static final String RESET_TEXT_COLOR = EscapeSequences.RESET_TEXT_COLOR;
 
     ArrayList<String> header = new ArrayList<>();
 
@@ -81,36 +82,36 @@ public class Printer {
         ChessPiece chessPiece = board.getPiece(chessPosition);
         if (chessPiece == null){
             if (Objects.equals(getBackgroundColor(i, j), LIGHT_GREY_BACKGROUND)){
-                return LIGHT_GREY_TEXT + BLACK_PAWN;
+                return LIGHT_GREY_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
             }
-            return BLUE_TEXT + BLACK_PAWN;
+            return BLUE_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
         }
         if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            return getPieceStringWhite(chessPiece);
+            return getPieceStringWhite(chessPiece) + RESET_TEXT_COLOR;
         }
-        return getPieceStringBlack(chessPiece);
+        return getPieceStringBlack(chessPiece) + RESET_TEXT_COLOR;
     }
 
     private static String getPieceStringWhite(ChessPiece chessPiece) {
         return switch (chessPiece.getPieceType()) {
-            case KING -> WHITE_KING;
-            case QUEEN -> WHITE_QUEEN;
-            case BISHOP -> WHITE_BISHOP;
-            case KNIGHT -> WHITE_KNIGHT;
-            case ROOK -> WHITE_ROOK;
-            case PAWN -> WHITE_PAWN;
+            case KING -> WHITE_TEXT + BLACK_KING;
+            case QUEEN -> WHITE_TEXT + BLACK_QUEEN;
+            case BISHOP -> WHITE_TEXT + BLACK_BISHOP;
+            case KNIGHT -> WHITE_TEXT + BLACK_KNIGHT;
+            case ROOK -> WHITE_TEXT + BLACK_ROOK;
+            case PAWN -> WHITE_TEXT + BLACK_PAWN;
             default -> EMPTY;
         };
     }
 
     private static String getPieceStringBlack(ChessPiece chessPiece) {
         return switch (chessPiece.getPieceType()) {
-            case KING -> BLACK_KING;
-            case QUEEN -> BLACK_QUEEN;
-            case BISHOP -> BLACK_BISHOP;
-            case KNIGHT -> BLACK_KNIGHT;
-            case ROOK -> BLACK_ROOK;
-            case PAWN -> BLACK_PAWN;
+            case KING -> BLACK_TEXT + BLACK_KING;
+            case QUEEN -> BLACK_TEXT + BLACK_QUEEN;
+            case BISHOP -> BLACK_TEXT + BLACK_BISHOP;
+            case KNIGHT -> BLACK_TEXT + BLACK_KNIGHT;
+            case ROOK -> BLACK_TEXT + BLACK_ROOK;
+            case PAWN -> BLACK_TEXT + BLACK_PAWN;
             default -> EMPTY;
         };
     }

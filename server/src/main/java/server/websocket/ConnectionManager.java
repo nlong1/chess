@@ -51,7 +51,6 @@ public class ConnectionManager {
 //POSSIBLE CHANGE SERVERNOTIFICATION TO SERVERMESSAGE
     public void broadcast(String excludeVisitorName, ServerMessage serverMessage, Integer gameID) throws IOException {
         HashMap<String,Connection> gameConnections = connections.get(gameID);
-        System.out.println(gameConnections);
         var removeList = new ArrayList<Connection>();
         for (var c : gameConnections.values()) {
             if (c.session.isOpen()) {

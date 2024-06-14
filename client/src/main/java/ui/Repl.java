@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import org.eclipse.jetty.server.Server;
 import ui.EscapeSequences;
+import websocket.messages.ServerError;
 import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
@@ -56,18 +57,26 @@ public class Repl implements NotificationHandler{
             ServerNotification serverNotification = new Gson().fromJson(message,ServerNotification.class);
             System.out.println(serverNotification.getMessage());
         }
-        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+        else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
             ServerLoadGame serverLoadGame = new Gson().fromJson(message, ServerLoadGame.class);
             if (serverLoadGame.hasGame()){
                 Integer gameID = serverLoadGame.getGameID();
-                ChessGame chessGame = client.getGame(gameID);
-                System.out.println("        Printing Board...");;
+                ChessGame chessGame = null;
+                try {
+                    chessGame = client.getGame(gameID);
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
                 if (chessGame == null){
                     System.out.println("bad");
                 }
-                System.out.println(chessGame);
-                new Printer().printBoard(chessGame.getBoard(), serverLoadGame.getColor());
+                new Printer().printBoard(chessGame.getBoard(), client.getColor());
             }
+        }
+        else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.ERROR){
+            ServerError serverError = new Gson().fromJson(message,ServerError.class);
+            System.out.println(serverError.getMessage());
         }
         else{
 //            System.out.println("this isn't a notification??");
