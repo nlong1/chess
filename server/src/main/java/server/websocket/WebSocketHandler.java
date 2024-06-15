@@ -198,6 +198,13 @@ public class WebSocketHandler {
                 var message = String.format("        %s has left the game", username);
                 var notification = new ServerNotification(message);
                 connections.broadcast(username, notification, leaveGameCommand.getGameID());
+                GameData gameData = new DataBaseGameDataAccessObject().getGame(leaveGameCommand.getGameID());
+                if (Objects.equals(username, gameData.whiteUsername())){
+                    new DataBaseGameDataAccessObject().updateGame(leaveGameCommand.getGameID(), new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game()));
+                }
+                else if (Objects.equals(username, gameData.blackUsername())){
+                    new DataBaseGameDataAccessObject().updateGame(leaveGameCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game()));
+                }
             }
             else{
                 throw new DataAccessException("        unauthorized");
