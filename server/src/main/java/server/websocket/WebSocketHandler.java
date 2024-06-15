@@ -97,30 +97,12 @@ public class WebSocketHandler {
                 if (Objects.equals(gameData.whiteUsername(), username)) {
                     color = ChessGame.TeamColor.WHITE;
                     ChessGame updatedGame = gameData.game();
-                    if (color == updatedGame.getTeamTurn()) {
-                        updatedGame.makeMove(makeMoveCommand.getMove());
-                        updateGameStatus(updatedGame, color, username, makeMoveCommand);
-                        GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
-                        new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
-                    }
-                    else{
-                        notYourTurnErrorMessage("        not your turn", session);
-                        return;
-                    }
+                    if (makeMoveUpdateStatus(username, session, makeMoveCommand, color, updatedGame, gameData)) return;
                 }
                 else if (Objects.equals(gameData.blackUsername(), username)) {
                     color = ChessGame.TeamColor.BLACK;
                     ChessGame updatedGame = gameData.game();
-                    if (color == updatedGame.getTeamTurn()) {
-                        updatedGame.makeMove(makeMoveCommand.getMove());
-                        updateGameStatus(updatedGame, color, username, makeMoveCommand);
-                        GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
-                        new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
-                    }
-                    else{
-                        notYourTurnErrorMessage("        not your turn", session);
-                        return;
-                    }
+                    if (makeMoveUpdateStatus(username, session, makeMoveCommand, color, updatedGame, gameData)) return;
                 }
                 else{
                     throw new DataAccessException("        unauthorized");
@@ -155,6 +137,20 @@ public class WebSocketHandler {
         ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), color);
         session.getRemote().sendString(new Gson().toJson(serverLoadGame));
         connections.broadcast(username,serverLoadGame, makeMoveCommand.getGameID());
+    }
+
+    private boolean makeMoveUpdateStatus(String username, Session session, MakeMoveCommand makeMoveCommand, ChessGame.TeamColor color, ChessGame updatedGame, GameData gameData) throws InvalidMoveException, IOException, DataAccessException {
+        if (color == updatedGame.getTeamTurn()) {
+            updatedGame.makeMove(makeMoveCommand.getMove());
+            updateGameStatus(updatedGame, color, username, makeMoveCommand);
+            GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
+            new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
+        }
+        else{
+            notYourTurnErrorMessage("        not your turn", session);
+            return true;
+        }
+        return false;
     }
 
     private static void notYourTurnErrorMessage(String errorMessage, Session session) throws IOException {
