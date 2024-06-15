@@ -214,28 +214,28 @@ public class WebSocketHandler {
             if (dataBaseAuthDataAccessObject.getAuth(resignCommand.getAuthString())) {
                 GameData gameData = new DataBaseGameDataAccessObject().getGame(resignCommand.getGameID());
                 ChessGame updatedGame = gameData.game();
+                ChessGame.GameStatus status = gameData.game().gameStatus;
+                if (status != ChessGame.GameStatus.IN_PROGRESS){
+                    var serverError = new ServerError("        cannot resign twice");
+                    session.getRemote().sendString(new Gson().toJson(serverError));
+                    return;
+                }
                 if (Objects.equals(gameData.whiteUsername(), username)) {
-                    var message = String.format("        %s has resigned", username);
-                    var notification = new ServerNotification(message);
-                    connections.broadcast(username, notification, resignCommand.getGameID());
                     updatedGame.gameStatus = ChessGame.GameStatus.BLACK_WON;
                     new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
                     var winningMessage = String.format("        %s won!","black");
                     var winNotification = new ServerNotification(winningMessage);
                     connections.broadcast(username,winNotification, resignCommand.getGameID());
-                    session.getRemote().sendString(new Gson().toJson(notification));
+                    session.getRemote().sendString(new Gson().toJson(winNotification));
 
                 }
                 else if (Objects.equals(gameData.blackUsername(), username)){
-                    var message = String.format("        %s has resigned", username);
-                    var notification = new ServerNotification(message);
-                    connections.broadcast(username, notification, resignCommand.getGameID());
                     updatedGame.gameStatus = ChessGame.GameStatus.WHITE_WON;
                     new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
                     var winningMessage = String.format("        %s won!","white");
                     var winNotification = new ServerNotification(winningMessage);
                     connections.broadcast(username,winNotification, resignCommand.getGameID());
-                    session.getRemote().sendString(new Gson().toJson(notification));
+                    session.getRemote().sendString(new Gson().toJson(winNotification));
                 }
                 else{
                     throw new DataAccessException("        unauthorized");
