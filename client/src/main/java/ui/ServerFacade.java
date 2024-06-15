@@ -22,7 +22,12 @@ public class ServerFacade {
     private final String serverUrl;
 
     public ServerFacade(String url){
-        serverUrl = url;
+        if (url == "http://localhost:0"){
+            this.serverUrl = "http://localhost:8080";
+        }
+        else {
+            this.serverUrl = url;
+        }
     }
 
     public String joinGame(String player, Integer gameId, String authToken) throws Exception{

@@ -14,10 +14,12 @@ public class ChessGame {
 
     private ChessBoard board;
     private TeamColor teamColor = TeamColor.WHITE;
+    public GameStatus gameStatus;
 
     public ChessGame() {
         this.board = new ChessBoard();
         board.resetBoard();
+        this.gameStatus = GameStatus.IN_PROGRESS;
     }
 
     /**
@@ -53,6 +55,13 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    public enum GameStatus {
+        IN_PROGRESS,
+        WHITE_WON,
+        BLACK_WON,
+        STALEMATE
     }
 
     /**
@@ -110,6 +119,17 @@ public class ChessGame {
         }
         else {
             teamColor = TeamColor.BLACK;
+        }
+        if (isInCheckmate(teamColor)){
+            if (teamColor == TeamColor.WHITE){
+                gameStatus = GameStatus.BLACK_WON;
+            }
+            else{
+                gameStatus = GameStatus.WHITE_WON;
+            }
+        }
+        else if (isInStalemate(teamColor)){
+            gameStatus = GameStatus.STALEMATE;
         }
     }
 

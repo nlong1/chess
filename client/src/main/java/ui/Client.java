@@ -147,8 +147,8 @@ public class Client {
                 else{
                     color = ChessGame.TeamColor.BLACK;
                 }
-                ws = new WebSocketFacade(serverUrl,notificationHandler);
-                ws.join(authToken,gamesIdMap.get(Integer.valueOf(tokens[2])),color);
+                    ws = new WebSocketFacade(serverUrl, notificationHandler);
+                    ws.join(authToken, gamesIdMap.get(Integer.valueOf(tokens[2])), color);
                 System.out.println(response);
                 return "...";
             }
