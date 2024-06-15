@@ -63,7 +63,6 @@ public class WebSocketHandler {
             if (dataBaseAuthDataAccessObject.getAuth(connectCommand.getAuthString())) {
                 if (new DataBaseGameDataAccessObject().gameExists(connectCommand.getGameID())){
                 connections.add(username, session, connectCommand.getGameID());
-
                 String color;
                 if (connectCommand.getColor() == ChessGame.TeamColor.WHITE) {
                     color = "white";
@@ -94,7 +93,7 @@ public class WebSocketHandler {
 
     private void makeMove(String username,Session session, MakeMoveCommand makeMoveCommand) throws IOException {
         try {
-            if (dataBaseAuthDataAccessObject.getAuth(makeMoveCommand.getAuthString())) {
+            if (dataBaseAuthDataAccessObject.getAuth(makeMoveCommand.getAuthString()) && (makeMoveCommand.getColor() != null)) {
                 GameData gameData = new DataBaseGameDataAccessObject().getGame(makeMoveCommand.getGameID());
                 ChessGame updatedGame = gameData.game();
                 updatedGame.makeMove(makeMoveCommand.getChessMove());
@@ -106,16 +105,21 @@ public class WebSocketHandler {
             }
             }
         catch (DataAccessException e){
+            System.out.println(e.getMessage());
             var serverError = new ServerError(e.getMessage());
             session.getRemote().sendString(new Gson().toJson(serverError));
             return;
         }
         catch (InvalidMoveException e){
+            System.out.println(e.getMessage());
             ServerError serverError = new ServerError(e.getMessage());
             session.getRemote().sendString(new Gson().toJson(serverError));
+            return;
         }
-        catch (Exception _){
+        catch (Exception e){
             System.out.println("Exception caught");
+            ServerError serverError = new ServerError(e.getMessage());
+            session.getRemote().sendString(new Gson().toJson(serverError));
             return;
         }
         var message = String.format("        %s made a move",username);

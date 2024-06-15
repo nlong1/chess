@@ -17,7 +17,7 @@ public class Client {
     private ui.WebSocketFacade ws;
     private final NotificationHandler notificationHandler;
     private Integer gameNumber;
-    private ChessGame.TeamColor color;
+    private ChessGame.TeamColor color = null;
 
     public Client(String serverUrl,NotificationHandler notificationHandler){
         server = new ServerFacade(serverUrl);
@@ -26,7 +26,7 @@ public class Client {
     }
 
     public ChessGame.TeamColor getColor(){
-        return color;
+        return Objects.requireNonNullElse(color, ChessGame.TeamColor.WHITE);
     }
 
     private void updateGames() throws ResponseException {

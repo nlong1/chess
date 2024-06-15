@@ -96,12 +96,12 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         if (board.getPiece(startPosition) == null || board.getPiece(startPosition).getTeamColor() != teamColor){
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("        wrong color or no piece there");
         }
 
         Collection<ChessMove> moves = this.validMoves(startPosition);
         if (!moves.contains(move)){
-            throw new InvalidMoveException("invalid move");
+            throw new InvalidMoveException("        invalid move");
         }
 
         board.applyMove(move);
