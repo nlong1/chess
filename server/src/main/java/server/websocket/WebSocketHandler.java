@@ -29,7 +29,6 @@ public class WebSocketHandler {
         try {
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
-            // Throws a custom UnauthorizedException. Yours may work differently.
             String username = new DataBaseAuthDataAccessObject().getUsername(command.getAuthString());
 
             switch (command.getCommandType()) {
@@ -42,13 +41,6 @@ public class WebSocketHandler {
             catch (Exception e){
                 System.out.println(e.getMessage());
             }
-//        } catch (UnauthorizedException ex) {
-//            // Serializes and sends the error message
-//            sendMessage(session.getRemote(), new ErrorMessage("Error: unauthorized"));
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
-//        }
     }
 
 
@@ -112,8 +104,7 @@ public class WebSocketHandler {
                         new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
                     }
                     else{
-                        var serverError = new ServerError("        not your turn");
-                        session.getRemote().sendString(new Gson().toJson(serverError));
+                        notYourTurnErrorMessage("        not your turn", session);
                         return;
                     }
                 }
@@ -127,8 +118,7 @@ public class WebSocketHandler {
                         new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
                     }
                     else{
-                        var serverError = new ServerError("        not your turn");
-                        session.getRemote().sendString(new Gson().toJson(serverError));
+                        notYourTurnErrorMessage("        not your turn", session);
                         return;
                     }
                 }
@@ -165,6 +155,12 @@ public class WebSocketHandler {
         ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), color);
         session.getRemote().sendString(new Gson().toJson(serverLoadGame));
         connections.broadcast(username,serverLoadGame, makeMoveCommand.getGameID());
+    }
+
+    private static void notYourTurnErrorMessage(String errorMessage, Session session) throws IOException {
+        var serverError = new ServerError(errorMessage);
+        session.getRemote().sendString(new Gson().toJson(serverError));
+        return;
     }
 
     private String getColor(ChessGame.TeamColor color){
