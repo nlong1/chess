@@ -196,7 +196,7 @@ public class Client {
                 move <start position> <end position> <promotion piece> - makes a move on the board
                     eg: move <A7> <A6> <none>
                 resign - the game ends
-                highlight - highlights legal moves \n
+                highlight <start position> - highlights legal moves for piece \n
         """;
     }
 
@@ -244,7 +244,7 @@ public class Client {
                     case "resign":
                         return resign();
                     case "highlight":
-                        return highlight();
+                        return highlight(tokens);
                     default:
                         return gameHelp();
 
@@ -256,7 +256,14 @@ public class Client {
         }
     }
 
-    private String highlight() {
+    private String highlight(String[] tokens) throws ResponseException {
+        if (tokens.length != 2){
+            throw new ResponseException(500,"        Invalid Highlight Format: highlight <position>");
+        }
+        updateGames();
+        ChessLetterConverter chessLetterConverter = new ChessLetterConverter();
+        ChessPosition position = new ChessPosition(Integer.parseInt(String.valueOf(tokens[1].charAt(1))),chessLetterConverter.getNumber(tokens[1].charAt(0)));
+        new Printer().highlightBoard(gamesMap.get(gameNumber),color,position);
         return "";
     }
 

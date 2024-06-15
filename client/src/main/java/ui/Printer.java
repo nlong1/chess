@@ -1,10 +1,9 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 public class Printer {
@@ -26,9 +25,11 @@ public class Printer {
     public static final String BLACK_TEXT = EscapeSequences.SET_TEXT_COLOR_BLACK;
     public static final String DARK_GREY_TEXT = EscapeSequences.SET_TEXT_COLOR_DARK_GREY;
     public static final String LIGHT_GREY_TEXT = EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
+    public static final String SET_TEXT_COLOR_GREEN = EscapeSequences.SET_TEXT_COLOR_GREEN;
     public static final String BLUE_TEXT = EscapeSequences.SET_TEXT_COLOR_BLUE;
     public static final String DARK_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_DARK_GREY;
     public static final String BLUE_BACKGROUND = EscapeSequences.SET_BG_COLOR_BLUE;
+    public static final String SET_BG_COLOR_GREEN = EscapeSequences.SET_BG_COLOR_GREEN;
     public static final String LIGHT_GREY_BACKGROUND = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
     public static final String RESET_BACKGROUND_COLOR = EscapeSequences.RESET_BG_COLOR;
     public static final String WHITE_TEXT = EscapeSequences.SET_TEXT_COLOR_WHITE;
@@ -77,21 +78,6 @@ public class Printer {
         }
     }
 
-    private String getChessPieceString(ChessBoard board, int i, int j) {
-        ChessPosition chessPosition = new ChessPosition(i, j);
-        ChessPiece chessPiece = board.getPiece(chessPosition);
-        if (chessPiece == null){
-            if (Objects.equals(getBackgroundColor(i, j), LIGHT_GREY_BACKGROUND)){
-                return LIGHT_GREY_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
-            }
-            return BLUE_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
-        }
-        if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            return getPieceStringWhite(chessPiece) + RESET_TEXT_COLOR;
-        }
-        return getPieceStringBlack(chessPiece) + RESET_TEXT_COLOR;
-    }
-
     private static String getPieceStringWhite(ChessPiece chessPiece) {
         return switch (chessPiece.getPieceType()) {
             case KING -> WHITE_TEXT + BLACK_KING;
@@ -127,6 +113,15 @@ public class Printer {
         header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  G ");
         header.add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  H ");
         header.add(DARK_GREY_BACKGROUND + EMPTY);
+    }
+
+    private String getHighlightedBackgroundColor(int i, int j,ArrayList<ChessPosition> positions){
+        for (ChessPosition position : positions){
+            if (i == position.getRow() && j == position.getColumn()){
+                return SET_BG_COLOR_GREEN;
+            }
+        }
+        return getBackgroundColor(i,j);
     }
 
     private void createRows(ChessBoard board) {
@@ -191,4 +186,75 @@ public class Printer {
         System.out.println(RESET_BACKGROUND_COLOR+WHITE_TEXT);
 
     }
+
+    private String getChessPieceString(ChessBoard board, int i, int j) {
+        ChessPosition chessPosition = new ChessPosition(i, j);
+        ChessPiece chessPiece = board.getPiece(chessPosition);
+        if (chessPiece == null){
+            if (Objects.equals(getBackgroundColor(i, j), LIGHT_GREY_BACKGROUND)){
+                return LIGHT_GREY_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
+            }
+            return BLUE_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
+        }
+        if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            return getPieceStringWhite(chessPiece) + RESET_TEXT_COLOR;
+        }
+        return getPieceStringBlack(chessPiece) + RESET_TEXT_COLOR;
+    }
+
+    public String getHighlightedChessPieceString(ChessBoard board, int i, int j,ArrayList<ChessPosition> positions){
+        ChessPosition chessPosition = new ChessPosition(i, j);
+        ChessPiece chessPiece = board.getPiece(chessPosition);
+        if (chessPiece == null){
+            if (Objects.equals(getHighlightedBackgroundColor(i, j,positions), LIGHT_GREY_BACKGROUND)){
+                return LIGHT_GREY_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
+            }
+            else if (Objects.equals(getHighlightedBackgroundColor(i, j,positions), SET_BG_COLOR_GREEN)){
+                return SET_TEXT_COLOR_GREEN + BLACK_PAWN + RESET_TEXT_COLOR;
+            }
+            else{
+                return BLUE_TEXT + BLACK_PAWN + RESET_TEXT_COLOR;
+            }
+        }
+        if (chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            return getPieceStringWhite(chessPiece) + RESET_TEXT_COLOR;
+        }
+        return getPieceStringBlack(chessPiece) + RESET_TEXT_COLOR;
+    }
+
+    private void createHighlightedRows(ChessBoard board, Collection<ChessMove> moves,ChessPosition position) {
+        ArrayList<ChessPosition> positions = new ArrayList<>();
+        for (ChessMove move : moves){
+            positions.add(move.getEndPosition());
+        }
+        positions.add(position);
+
+        for (int i = 1; i <= 8; i++){
+            for (int j = 0; j <= 9; j++) {
+
+                if (j == 0 || j == 9){
+                    rows.get(i-1).add(DARK_GREY_BACKGROUND + BLACK_TEXT + "  " + String.valueOf(i) + "  ");
+                }
+                else{
+                    rows.get(i-1).add(getHighlightedBackgroundColor(i,j,positions) + getHighlightedChessPieceString(board,i,j,positions));
+                }
+
+            }
+        }
+    }
+
+    public void highlightBoard(ChessGame game,ChessGame.TeamColor color,ChessPosition position){
+        createHighlightedRows(game.getBoard(),game.validMoves(position),position);
+        createHeader();
+        if (color == ChessGame.TeamColor.BLACK){
+            printBlackBoard();
+        }
+        else{
+            printWhiteBoard();
+        }
+        System.out.println(RESET_BACKGROUND_COLOR+WHITE_TEXT);
+    }
+
 }
+
+
