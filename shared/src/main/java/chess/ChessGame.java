@@ -105,7 +105,7 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         if (board.getPiece(startPosition) == null || board.getPiece(startPosition).getTeamColor() != teamColor){
-            throw new InvalidMoveException("        wrong color or no piece there");
+            throw new InvalidMoveException();
         }
 
         Collection<ChessMove> moves = this.validMoves(startPosition);
@@ -119,18 +119,6 @@ public class ChessGame {
         }
         else {
             teamColor = TeamColor.BLACK;
-        }
-
-        if (isInCheckmate(teamColor)){
-            if (teamColor == TeamColor.WHITE){
-                gameStatus = GameStatus.BLACK_WON;
-            }
-            else{
-                gameStatus = GameStatus.WHITE_WON;
-            }
-        }
-        else if (isInStalemate(teamColor)){
-            gameStatus = GameStatus.STALEMATE;
         }
     }
 

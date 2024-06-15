@@ -103,22 +103,18 @@ public class WebSocketHandler {
                 System.out.println(gameData.whiteUsername());
                 System.out.println(gameData.blackUsername());
                 if (Objects.equals(gameData.whiteUsername(), username)) {
-                    System.out.println("white makes a move");
                     color = ChessGame.TeamColor.WHITE;
                     ChessGame updatedGame = gameData.game();
-                    System.out.println("have updated game");
                     updatedGame.makeMove(makeMoveCommand.getMove());
-                    System.out.println("made a move");
+                    updateGameStatus(updatedGame,color,username,makeMoveCommand);
                     GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
-                    System.out.println("made updated game data");
                     new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
-                    System.out.println("updated game");
                 }
                 else if (Objects.equals(gameData.blackUsername(), username)) {
-                    System.out.println("black makes a move");
                     color = ChessGame.TeamColor.BLACK;
                     ChessGame updatedGame = gameData.game();
                     updatedGame.makeMove(makeMoveCommand.getMove());
+                    updateGameStatus(updatedGame,color,username,makeMoveCommand);
                     GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
                     new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
                 }
@@ -155,6 +151,34 @@ public class WebSocketHandler {
         ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), color);
         session.getRemote().sendString(new Gson().toJson(serverLoadGame));
         connections.broadcast(username,serverLoadGame, makeMoveCommand.getGameID());
+    }
+
+    private String getColor(ChessGame.TeamColor color){
+        if (color == ChessGame.TeamColor.WHITE){
+            return "white";
+        }
+        return "black";
+    }
+
+    private void updateGameStatus(ChessGame game,ChessGame.TeamColor color,String username,MakeMoveCommand makeMoveCommand) throws IOException {
+        ChessGame.TeamColor enemyColor = game.getEnemyTeamColor(color);
+        if (game.isInCheckmate(enemyColor)){
+            var message = String.format("        %s wins",getColor(color));
+            var notification = new ServerNotification(message);
+            connections.broadcast(username, notification, makeMoveCommand.getGameID());
+            if (color == ChessGame.TeamColor.BLACK) {
+                game.gameStatus = ChessGame.GameStatus.BLACK_WON;
+            }
+            else{
+                game.gameStatus = ChessGame.GameStatus.WHITE_WON;
+            }
+        }
+        if (game.isInStalemate(enemyColor)){
+            var message = String.format("        stalemate");
+            var notification = new ServerNotification(message);
+            connections.broadcast(username, notification, makeMoveCommand.getGameID());
+            game.gameStatus = ChessGame.GameStatus.STALEMATE;
+        }
     }
 
     private void leaveGame(Session session, String username, LeaveGameCommand leaveGameCommand) throws IOException {
