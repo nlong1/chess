@@ -2,8 +2,6 @@ package ui;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import org.eclipse.jetty.server.Server;
-import ui.EscapeSequences;
 import websocket.messages.ServerError;
 import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerMessage;

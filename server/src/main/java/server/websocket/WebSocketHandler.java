@@ -9,15 +9,12 @@ import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import responses.ListGamesResponse;
-import server.Server;
 import websocket.commands.*;
 import websocket.messages.ServerError;
 import websocket.messages.ServerLoadGame;
 import websocket.messages.ServerNotification;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -110,7 +107,7 @@ public class WebSocketHandler {
                     color = ChessGame.TeamColor.WHITE;
                     ChessGame updatedGame = gameData.game();
                     System.out.println("have updated game");
-                    updatedGame.makeMove(makeMoveCommand.getChessMove());
+                    updatedGame.makeMove(makeMoveCommand.getMove());
                     System.out.println("made a move");
                     GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
                     System.out.println("made updated game data");
@@ -121,12 +118,12 @@ public class WebSocketHandler {
                     System.out.println("black makes a move");
                     color = ChessGame.TeamColor.BLACK;
                     ChessGame updatedGame = gameData.game();
-                    updatedGame.makeMove(makeMoveCommand.getChessMove());
+                    updatedGame.makeMove(makeMoveCommand.getMove());
                     GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
                     new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
                 }
                 else{
-                    throw new DataAccessException("        bad");
+                    throw new DataAccessException("        unauthorized");
                 }
             }
             else{
@@ -181,20 +178,24 @@ public class WebSocketHandler {
     private void resign(Session session, String username, ResignCommand resignCommand) throws IOException {
         try {
             if (dataBaseAuthDataAccessObject.getAuth(resignCommand.getAuthString())) {
-                var message = String.format("        %s has resigned", username);
-                var notification = new ServerNotification(message);
-                connections.broadcast(username, notification, resignCommand.getGameID());
                 GameData gameData = new DataBaseGameDataAccessObject().getGame(resignCommand.getGameID());
                 ChessGame updatedGame = gameData.game();
-
                 if (Objects.equals(gameData.whiteUsername(), username)) {
+                    var message = String.format("        %s has resigned", username);
+                    var notification = new ServerNotification(message);
+                    connections.broadcast(username, notification, resignCommand.getGameID());
                     updatedGame.gameStatus = ChessGame.GameStatus.BLACK_WON;
                     new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
                     var winningMessage = String.format("        %s won!","black");
                     var winNotification = new ServerNotification(winningMessage);
                     connections.broadcast(username,winNotification, resignCommand.getGameID());
+
                 }
                 else if (Objects.equals(gameData.blackUsername(), username)){
+                    var message = String.format("        %s has resigned", username);
+                    var notification = new ServerNotification(message);
+                    connections.broadcast(username, notification, resignCommand.getGameID());
+
                     updatedGame.gameStatus = ChessGame.GameStatus.WHITE_WON;
                     new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
                     var winningMessage = String.format("        %s won!","white");
