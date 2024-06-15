@@ -8,6 +8,7 @@ import ui.ResponseException;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveGameCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.ResignCommand;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotification;
 
@@ -70,9 +71,20 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void makeMove(String authToken, Integer gameID , ChessGame.TeamColor color, ChessMove chessMove) throws ResponseException {
+    public void resign(String authToken,Integer gameID) throws ResponseException {
         try {
-            var command = new MakeMoveCommand(authToken,gameID,color,chessMove);
+            var command = new ResignCommand(authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        }
+        catch (IOException e){
+            System.out.println("IOException");
+            throw new ResponseException(500,e.getMessage());
+        }
+    }
+
+    public void makeMove(String authToken, Integer gameID , ChessMove chessMove,ChessGame.TeamColor color) throws ResponseException {
+        try {
+            var command = new MakeMoveCommand(authToken,gameID,chessMove);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException e) {
             System.out.println("        invalid move");

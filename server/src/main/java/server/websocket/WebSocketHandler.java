@@ -1,7 +1,6 @@
 package server.websocket;
 
-import chess.ChessGame;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.dao.sqldao.DataBaseAuthDataAccessObject;
@@ -19,6 +18,7 @@ import websocket.messages.ServerNotification;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 
 @WebSocket
@@ -92,13 +92,42 @@ public class WebSocketHandler {
     }
 
     private void makeMove(String username,Session session, MakeMoveCommand makeMoveCommand) throws IOException {
+        DataBaseGameDataAccessObject dataBaseGameDataAccessObject = new DataBaseGameDataAccessObject();
+        ChessGame.TeamColor color = null;
         try {
-            if (dataBaseAuthDataAccessObject.getAuth(makeMoveCommand.getAuthString()) && (makeMoveCommand.getColor() != null)) {
-                GameData gameData = new DataBaseGameDataAccessObject().getGame(makeMoveCommand.getGameID());
-                ChessGame updatedGame = gameData.game();
-                updatedGame.makeMove(makeMoveCommand.getChessMove());
-                GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
-                new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
+            if (dataBaseGameDataAccessObject.getGame(makeMoveCommand.getGameID()).game().gameStatus != ChessGame.GameStatus.IN_PROGRESS){
+                ServerError serverError = new ServerError("        game is over");
+                session.getRemote().sendString(new Gson().toJson(serverError));
+                return;
+            }
+            if (dataBaseAuthDataAccessObject.getAuth(makeMoveCommand.getAuthString())) {
+                GameData gameData = dataBaseGameDataAccessObject.getGame(makeMoveCommand.getGameID());
+                System.out.println(username);
+                System.out.println(gameData.whiteUsername());
+                System.out.println(gameData.blackUsername());
+                if (Objects.equals(gameData.whiteUsername(), username)) {
+                    System.out.println("white makes a move");
+                    color = ChessGame.TeamColor.WHITE;
+                    ChessGame updatedGame = gameData.game();
+                    System.out.println("have updated game");
+                    updatedGame.makeMove(makeMoveCommand.getChessMove());
+                    System.out.println("made a move");
+                    GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
+                    System.out.println("made updated game data");
+                    new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
+                    System.out.println("updated game");
+                }
+                else if (Objects.equals(gameData.blackUsername(), username)) {
+                    System.out.println("black makes a move");
+                    color = ChessGame.TeamColor.BLACK;
+                    ChessGame updatedGame = gameData.game();
+                    updatedGame.makeMove(makeMoveCommand.getChessMove());
+                    GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
+                    new DataBaseGameDataAccessObject().updateGame(makeMoveCommand.getGameID(), updatedGameData);
+                }
+                else{
+                    throw new DataAccessException("        bad");
+                }
             }
             else{
                 throw new DataAccessException("        unauthorized");
@@ -125,8 +154,8 @@ public class WebSocketHandler {
         var message = String.format("        %s made a move",username);
         var notification = new ServerNotification(message);
         connections.broadcast(username, notification, makeMoveCommand.getGameID());
-        var loadGame = new ServerLoadGame(true,makeMoveCommand.getGameID(),makeMoveCommand.getColor());
-        ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), makeMoveCommand.getColor());
+        var loadGame = new ServerLoadGame(true,makeMoveCommand.getGameID(),color);
+        ServerLoadGame serverLoadGame = new ServerLoadGame(true, makeMoveCommand.getGameID(), color);
         session.getRemote().sendString(new Gson().toJson(serverLoadGame));
         connections.broadcast(username,serverLoadGame, makeMoveCommand.getGameID());
     }
@@ -152,10 +181,30 @@ public class WebSocketHandler {
     private void resign(Session session, String username, ResignCommand resignCommand) throws IOException {
         try {
             if (dataBaseAuthDataAccessObject.getAuth(resignCommand.getAuthString())) {
-                var message = String.format("        %s has forfeit", username);
+                var message = String.format("        %s has resigned", username);
                 var notification = new ServerNotification(message);
                 connections.broadcast(username, notification, resignCommand.getGameID());
-                connections.deleteGame(resignCommand.getGameID());
+                GameData gameData = new DataBaseGameDataAccessObject().getGame(resignCommand.getGameID());
+                ChessGame updatedGame = gameData.game();
+
+                if (Objects.equals(gameData.whiteUsername(), username)) {
+                    updatedGame.gameStatus = ChessGame.GameStatus.BLACK_WON;
+                    new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
+                    var winningMessage = String.format("        %s won!","black");
+                    var winNotification = new ServerNotification(winningMessage);
+                    connections.broadcast(username,winNotification, resignCommand.getGameID());
+                }
+                else if (Objects.equals(gameData.blackUsername(), username)){
+                    updatedGame.gameStatus = ChessGame.GameStatus.WHITE_WON;
+                    new DataBaseGameDataAccessObject().updateGame(resignCommand.getGameID(), new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame));
+                    var winningMessage = String.format("        %s won!","white");
+                    var winNotification = new ServerNotification(winningMessage);
+                    connections.broadcast(username,winNotification, resignCommand.getGameID());
+                }
+                else{
+                    throw new DataAccessException("        unauthorized");
+                }
+
             } else {
                 throw new DataAccessException("        unauthorized");
             }

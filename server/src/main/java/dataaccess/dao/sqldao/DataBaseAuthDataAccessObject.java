@@ -21,7 +21,6 @@ public class DataBaseAuthDataAccessObject implements AuthDataAccessObject {
             System.out.println(e.getMessage());
             throw new DataAccessException(e.getMessage());
         }
-        System.out.println("Success in creating authToken");
         return authToken;
     }
 

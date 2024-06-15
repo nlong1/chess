@@ -261,6 +261,12 @@ public class Client {
     }
 
     private String resign() {
+        try {
+            ws.resign(authToken,gamesIdMap.get(gameNumber));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return "";
     }
 
@@ -270,7 +276,7 @@ public class Client {
                 throw new ResponseException(500,"        Invalid Move Format: move <start> <end> <piece>");
             }
             ChessMove chessMove = getChessMove(tokens);
-            ws.makeMove(authToken,gamesIdMap.get(gameNumber),color,chessMove);
+            ws.makeMove(authToken,gamesIdMap.get(gameNumber),chessMove,color);
         }
         catch (Exception e){
             System.out.println(e.getMessage());

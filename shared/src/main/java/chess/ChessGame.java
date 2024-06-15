@@ -120,6 +120,7 @@ public class ChessGame {
         else {
             teamColor = TeamColor.BLACK;
         }
+
         if (isInCheckmate(teamColor)){
             if (teamColor == TeamColor.WHITE){
                 gameStatus = GameStatus.BLACK_WON;

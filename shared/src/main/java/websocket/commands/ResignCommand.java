@@ -1,5 +1,7 @@
 package websocket.commands;
 
+import chess.ChessGame;
+
 public class ResignCommand extends UserGameCommand{
     private final Integer gameID;
 
@@ -12,4 +14,5 @@ public class ResignCommand extends UserGameCommand{
     public Integer getGameID(){
         return gameID;
     }
+
 }

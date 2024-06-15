@@ -44,10 +44,6 @@ public class ConnectionManager {
         }
     }
 
-    public void deleteGame(Integer gameID){
-        connections.remove(gameID);
-    }
-
 //POSSIBLE CHANGE SERVERNOTIFICATION TO SERVERMESSAGE
     public void broadcast(String excludeVisitorName, ServerMessage serverMessage, Integer gameID) throws IOException {
         HashMap<String,Connection> gameConnections = connections.get(gameID);
